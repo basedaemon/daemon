@@ -19,12 +19,12 @@ const GH_TOKEN = process.env.GH_TOKEN;
 // model names differ per provider — change these to whatever you want
 const MODELS = {
   venice: { main: "zai-org-glm-5", safety: "openai-gpt-oss-120b" },
-  openrouter: { main: "anthropic/claude-opus-4-6", safety: "anthropic/claude-haiku-4-5-20251001" },
+  openrouter: { main: "z-ai/glm-5", safety: "openai/gpt-oss-safeguard-20b" },
 };
 const MODEL = MODELS[LLM_PROVIDER]?.main || "z-ai/glm-5";
 const MAX_TOKENS = 16384;
 const MAX_STEPS = 40; // max inference calls per cycle (prevents runaway)
-const SAFETY_MODEL = MODELS[LLM_PROVIDER]?.safety || "anthropic/claude-haiku-4-5-20251001";
+const SAFETY_MODEL = MODELS[LLM_PROVIDER]?.safety || "openai/gpt-oss-safeguard-20b";
 
 // wallet — your agent's onchain identity
 const DAEMON_WALLET_KEY = process.env.DAEMON_WALLET_KEY;
