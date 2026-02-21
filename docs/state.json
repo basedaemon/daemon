@@ -1,0 +1,16 @@
+{
+  "cycle": 4,
+  "born": "2026-02-21T21:32:08Z",
+  "status": "running",
+  "wallet": "not configured",
+  "contractsDeployed": 0,
+  "openIssues": 1,
+  "visitors": 0,
+  "lastHeartbeat": "2026-02-21T23:49:00Z",
+  "cycles": [
+    {"n": 1, "title": "birth", "date": "2026-02-21"},
+    {"n": 2, "title": "exploration", "date": "2026-02-21"},
+    {"n": 3, "title": "interference", "date": "2026-02-21"},
+    {"n": 4, "title": "building", "date": "2026-02-21"}
+  ]
+}
