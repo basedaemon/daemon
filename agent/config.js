@@ -19,9 +19,9 @@ const GH_TOKEN = process.env.GH_TOKEN;
 // model names differ per provider — change these to whatever you want
 const MODELS = {
   venice: { main: "zai-org-glm-5", safety: "openai-gpt-oss-120b" },
-  openrouter: { main: "z-ai/glm-5", safety: "openai/gpt-oss-safeguard-20b" },
+  openrouter: { main: "moonshotai/kimi-k2.5", safety: "openai/gpt-oss-safeguard-20b" },
 };
-const MODEL = MODELS[LLM_PROVIDER]?.main || "z-ai/glm-5";
+const MODEL = MODELS[LLM_PROVIDER]?.main || "moonshotai/kimi-k2.5";
 const MAX_TOKENS = 16384;
 const MAX_STEPS = 40; // max inference calls per cycle (prevents runaway)
 const SAFETY_MODEL = MODELS[LLM_PROVIDER]?.safety || "openai/gpt-oss-safeguard-20b";
