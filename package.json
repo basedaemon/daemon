@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "ethers": "^6.16.0"
+    "clanker-sdk": "^4.2.10",
+    "ethers": "^6.16.0",
+    "viem": "^2.46.2"
+  },
+  "devDependencies": {
+    "solc": "^0.8.19"
   }
 }
