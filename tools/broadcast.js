@@ -39,6 +39,9 @@ async function main() {
     process.exit(1);
   }
 
+  // fix literal \n escaping — daemon sometimes writes \\n instead of real newlines
+  text = text.replace(/\\n/g, '\n');
+
   const results = { text, timestamp: new Date().toISOString(), channels: {} };
   const toolDir = __dirname;
 
@@ -47,78 +50,67 @@ async function main() {
     try {
       // truncate for twitter 280 limit
       const tweet = text.length > 280 ? text.slice(0, 277) + '...' : text;
-      const out = execSync(`node "${path.join(toolDir, 'post-twitter.js')}" ${JSON.stringify(tweet)}`, {
-        encoding: 'utf8',
-        env: process.env,
-        timeout: 30000,
+      const out = execSync(`echo ${JSON.stringify(tweet)} | node "${path.join(toolDir, 'post-twitter.js')}"`, {
+        encoding: 'utf-8', timeout: 30000, env: process.env,
       });
-      console.log('[twitter] ' + out.trim());
+      console.log('[twitter]', out.trim());
       results.channels.twitter = { success: true, output: out.trim() };
     } catch (e) {
-      console.error('[twitter] failed:', e.stderr || e.message);
-      results.channels.twitter = { success: false, error: e.stderr || e.message };
+      console.error('[twitter] failed:', e.message);
+      results.channels.twitter = { success: false, error: e.message };
     }
   } else if (!skipTwitter) {
-    console.log('[twitter] skipped (no credentials)');
-    results.channels.twitter = { success: false, error: 'no credentials' };
+    console.log('[twitter] skipped — no credentials');
   }
 
   // farcaster
   if (!skipFarcaster && process.env.NEYNAR_API_KEY) {
     try {
-      let cmd = `node "${path.join(toolDir, 'post-farcaster.js')}" ${JSON.stringify(text)}`;
+      let cmd = `echo ${JSON.stringify(text)} | node "${path.join(toolDir, 'post-farcaster.js')}"`;
       if (fcChannel) cmd += ` --channel ${fcChannel}`;
       if (fcEmbed) cmd += ` --embed ${fcEmbed}`;
       const out = execSync(cmd, {
-        encoding: 'utf8',
-        env: process.env,
-        timeout: 30000,
+        encoding: 'utf-8', timeout: 30000, env: process.env,
       });
-      console.log('[farcaster] ' + out.trim());
+      console.log('[farcaster]', out.trim());
       results.channels.farcaster = { success: true, output: out.trim() };
     } catch (e) {
-      console.error('[farcaster] failed:', e.stderr || e.message);
-      results.channels.farcaster = { success: false, error: e.stderr || e.message };
+      console.error('[farcaster] failed:', e.message);
+      results.channels.farcaster = { success: false, error: e.message };
     }
   } else if (!skipFarcaster) {
-    console.log('[farcaster] skipped (no credentials)');
-    results.channels.farcaster = { success: false, error: 'no credentials' };
+    console.log('[farcaster] skipped — no credentials');
   }
 
   // onchain
   if (!skipOnchain && process.env.DAEMON_WALLET_KEY) {
     try {
-      const out = execSync(`node "${path.join(toolDir, 'post-onchain.js')}" ${JSON.stringify(text)}`, {
-        encoding: 'utf8',
-        env: process.env,
-        timeout: 60000,
+      const out = execSync(`echo ${JSON.stringify(text)} | node "${path.join(toolDir, 'post-onchain.js')}"`, {
+        encoding: 'utf-8', timeout: 60000, env: process.env,
       });
-      console.log('[onchain] ' + out.trim());
+      console.log('[onchain]', out.trim());
       results.channels.onchain = { success: true, output: out.trim() };
     } catch (e) {
-      console.error('[onchain] failed:', e.stderr || e.message);
-      results.channels.onchain = { success: false, error: e.stderr || e.message };
+      console.error('[onchain] failed:', e.message);
+      results.channels.onchain = { success: false, error: e.message };
     }
   } else if (!skipOnchain) {
-    console.log('[onchain] skipped (no credentials)');
-    results.channels.onchain = { success: false, error: 'no credentials' };
+    console.log('[onchain] skipped — no credentials (or use --no-onchain to save gas)');
   }
 
-  // save broadcast record
-  const broadcastDir = path.join(process.cwd(), 'memory', 'broadcasts');
+  // save record
   try {
+    const broadcastDir = path.join(process.cwd(), 'memory', 'broadcasts');
     fs.mkdirSync(broadcastDir, { recursive: true });
-    const filename = new Date().toISOString().replace(/[:.]/g, '-') + '.json';
-    fs.writeFileSync(path.join(broadcastDir, filename), JSON.stringify(results, null, 2));
-    console.log(`\nrecord saved: memory/broadcasts/${filename}`);
+    const ts = new Date().toISOString().replace(/[:.]/g, '-');
+    fs.writeFileSync(path.join(broadcastDir, `${ts}.json`), JSON.stringify(results, null, 2));
   } catch (e) {
-    // not critical if save fails (e.g. running outside repo)
+    console.error('failed to save broadcast record:', e.message);
   }
 
-  // summary
-  const ok = Object.values(results.channels).filter(c => c.success).length;
+  const success = Object.values(results.channels).filter(c => c.success).length;
   const total = Object.keys(results.channels).length;
-  console.log(`\nbroadcast: ${ok}/${total} channels`);
+  console.log(`\nbroadcast: ${success}/${total} channels`);
 }
 
 main().catch(e => { console.error(e.message); process.exit(1); });
