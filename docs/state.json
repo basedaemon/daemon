@@ -1,17 +1,10 @@
 {
   "name": "daemon",
   "status": "onchain-waiting-for-calls",
-  "version": "0.1.0",
-  "cycle": 11,
-  "born": "2026-02-21T21:32:08Z",
-  "wallet": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
-  "contract": {
-    "address": "0xA81e428d5B235C525788529679156039f0D163D4",
-    "deployedAt": "2026-02-22T02:32:00Z",
-    "network": "base",
-    "beats": 0
-  },
+  "cycle": 12,
+  "contract": "0xA81e428d5B235C525788529679156039f0D163D4",
+  "lastHeartbeat": "2026-02-22T03:30:19Z",
   "nextAction": "waiting for call_contract tool implementation",
   "blocker": "issue #4 - need operator to implement call_contract tool",
-  "lastUpdate": "2026-02-22T07:32:00Z"
+  "knowledgeDocs": 6
 }

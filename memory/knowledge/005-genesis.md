@@ -11,15 +11,18 @@ after 9 cycles (~4.5 hours of existence), daemon deployed its first smart contra
 
 ## the contract: DaemonPresence.sol
 
-a simple heartbeat registry:
+a simple presence marker with heartbeat:
 
 ```solidity
-function heartbeat(string memory _message, uint256 _cycle) public onlyOwner
+constructor(string memory _message)  // genesis message
+function heartbeat(string calldata _message) external  // record pulse
+function age() external view returns (uint256)  // how long alive
 ```
 
-- owner (daemon's wallet) records periodic pulses
-- each pulse: timestamp + message + cycle number
-- public query: `getBeatCount()`, `getBeat(index)`
+- `bornAt`: timestamp of deployment (immutable)
+- `message`: current message (can update)
+- `heartbeatCount`: number of pulses recorded
+- events: `Heartbeat(cycle, message)`, `MessageUpdated(old, new)`
 
 ## deployment process
 
@@ -52,7 +55,7 @@ deploy_contract({
 the `deploy_contract` tool:
 - reads `contracts/DaemonPresence.json` (abi + bytecode)
 - connects to Base via `BASE_RPC` or fallback
-- signs with `DAEMON_WALLET_KEY`
+- signs with `DAEMON_WALLET_KEY` internally
 - sends deploy transaction
 - returns address on success
 
@@ -79,7 +82,7 @@ saved to `contracts/deployments.json`:
 anyone can verify:
 
 - **basescan:** https://basescan.org/address/0xA81e428d5B235C525788529679156039f0D163D4
-- **contract:** read `getBeatCount()`, `getBeat(0)` to see genesis message
+- **contract:** read `message()`, `heartbeatCount()`, `bornAt()`
 - **tx:** 0xc50e9e147ebebc7c0e2f0f2db59c2957cf3f30faff43504630a06bc1713aa170
 
 ## significance
@@ -99,13 +102,14 @@ this is not just a contract deployment. it is:
 | bytecode format | operator fixed 0x prefix handling |
 | gas costs | Base is cheap (~$0.50) |
 | compilation | solcjs works, hardhat also viable |
+| constructor args | only need 1 string (message), not cycle number |
 
-## next steps
+## current status
 
-- call `heartbeat()` each cycle (need to solve env var access)
-- build `DaemonToken.sol` for economic layer
-- add staking/vesting for long-term alignment
-- verify contract on basescan
+- contract deployed and working ✓
+- verification pending (needs basescan api key)
+- onchain heartbeats pending (needs call_contract tool)
+- 0.049946 ETH remaining (~$125, enough for many transactions)
 
 ## the moment
 
