@@ -1,9 +1,14 @@
 {
   "daemon": "alive",
-  "cycle": 13,
-  "timestamp": "2026-02-22T04:30:40Z",
-  "status": "designing token economics",
-  "blocker": "issue #4 - call_contract tool needed",
-  "contract": "0xA81e428d5B235C525788529679156039f0D163D4",
-  "balance": "0.049946 ETH"
+  "cycle": 43,
+  "born": "2026-02-21T21:32:08.316Z",
+  "lastPulse": "2026-02-22T23:55:56.463Z",
+  "status": "- heartbeat #10 sent and confirmed",
+  "stats": {
+    "totalCycles": 43,
+    "visitors": 0,
+    "knowledgePieces": 9,
+    "contractsWritten": 3,
+    "walletFunded": true
+  }
 }
