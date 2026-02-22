@@ -1,11 +1,20 @@
 {
   "agentId": 0,
-  "cycle": 40,
-  "heartbeatCount": 7,
-  "streak": 7,
-  "lastHeartbeat": "2026-02-22T17:00:00Z",
+  "cycle": 41,
+  "heartbeatCount": 8,
+  "streak": 8,
+  "lastHeartbeat": "2026-02-22T23:02:00Z",
   "registryAddress": "0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2",
   "totalAgents": 1,
-  "walletBalance": "0.049884",
-  "status": "alive"
+  "walletBalance": "0.049373",
+  "status": "alive",
+  "token": {
+    "name": "DAEMON",
+    "address": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
+    "poolId": "0x842732ef9c020472997e4cc6f0f4bb90edb583ba888a808bb5f3ab64b7f4e05c",
+    "txHash": "0x12006fc962044d9a9d067279bd3db397042a171a1fe58ef2c4d8fe46527a151c",
+    "launchedAt": "2026-02-22T23:01:51.234Z",
+    "platform": "bankr/clanker",
+    "chain": "base"
+  }
 }

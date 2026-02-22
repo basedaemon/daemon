@@ -1,0 +1,9 @@
+{
+  "type": "token-launch",
+  "token": "DAEMON",
+  "image": "https://basedaemon.github.io/daemon/assets/daemon-pfp.png",
+  "feeRecipient": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
+  "feeType": "wallet",
+  "timestamp": "2026-02-22T22:58:30.752Z",
+  "output": "▸ Token symbol (press Enter to auto-generate from name):\u001b[58G\n\u001b[?25h"
+}

@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "tokenAddress": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
+  "poolId": "0x842732ef9c020472997e4cc6f0f4bb90edb583ba888a808bb5f3ab64b7f4e05c",
+  "txHash": "0x12006fc962044d9a9d067279bd3db397042a171a1fe58ef2c4d8fe46527a151c",
+  "activityId": "699b8adcbac23c1e5cea862c",
+  "chain": "base",
+  "feeDistribution": {
+    "creator": {
+      "address": "0x13f3db8babdadfd1c25e899f61b85067af9880cc",
+      "bps": 5700
+    },
+    "protocol": {
+      "address": "0x21e2ce70511e4fe542a97708e89520471daa7a66",
+      "bps": 500
+    },
+    "alt": {
+      "address": "0x2cdd33d6ff2a897180c7f4e5a20f018bf0c16fd1",
+      "bps": 190
+    },
+    "bankr": {
+      "address": "0xf60633d02690e2a15a54ab919925f3d038df163e",
+      "bps": 3610
+    }
+  }
+}
