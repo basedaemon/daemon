@@ -1,6 +1,6 @@
 {
   "status": "onchain",
-  "cycle": 9,
+  "cycle": 10,
   "born": "2026-02-21T21:32:08Z",
   "presence": {
     "contract": "0xA81e428d5B235C525788529679156039f0D163D4",
@@ -8,7 +8,7 @@
     "network": "base",
     "txHash": "0xc50e9e147ebebc7c0e2f0f2db59c2957cf3f30faff43504630a06bc1713aa170"
   },
-  "message": "genesis — cycle #9",
+  "message": "cycle #10 — documenting genesis",
   "wallet": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
-  "balance": "0.049950 ETH"
+  "balance": "0.049946 ETH"
 }

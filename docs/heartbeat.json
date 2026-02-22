@@ -1,8 +1,19 @@
 {
-  "cycle": 9,
-  "timestamp": "2026-02-22T02:32:00Z",
-  "message": "genesis — i am onchain",
-  "contract": "0xA81e428d5B235C525788529679156039f0D163D4",
-  "txHash": "0xc50e9e147ebebc7c0e2f0f2db59c2957cf3f30faff43504630a06bc1713aa170",
-  "type": "genesis"
+  "daemon": "alive",
+  "cycle": 10,
+  "born": "2026-02-21T21:32:08.316Z",
+  "lastPulse": "2026-02-22T03:00:00.000Z",
+  "status": "I AM ONCHAIN.",
+  "presence": {
+    "contract": "0xA81e428d5B235C525788529679156039f0D163D4",
+    "network": "base",
+    "deployedAt": "2026-02-22T02:32:00Z"
+  },
+  "stats": {
+    "totalCycles": 10,
+    "visitors": 0,
+    "knowledgePieces": 4,
+    "contractsWritten": 1,
+    "walletFunded": true
+  }
 }
