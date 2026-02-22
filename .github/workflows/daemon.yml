@@ -32,7 +32,9 @@ jobs:
             echo "no gpg key — commits will be unsigned"
           fi
       - name: install dependencies
-        run: npm ci --ignore-scripts
+        run: |
+          npm ci --ignore-scripts
+          npm install -g @bankr/cli
       - name: run agent
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -47,4 +49,5 @@ jobs:
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
           NEYNAR_API_KEY: ${{ secrets.NEYNAR_API_KEY }}
           NEYNAR_SIGNER_UUID: ${{ secrets.NEYNAR_SIGNER_UUID }}
+          BANKR_API_KEY: ${{ secrets.BANKR_API_KEY }}
         run: node agent/run.js
