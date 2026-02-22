@@ -308,6 +308,17 @@ const TOOLS = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "check_wallet",
+      description: "Check the daemon's wallet ETH balance on Base. Use this to see how much ETH is available for gas and contract deployments.",
+      parameters: {
+        type: "object",
+        properties: {},
+        required: [],
+      },
+    },
+  },
 ];
-
 module.exports = { TOOLS };
