@@ -1,10 +1,10 @@
 {
   "name": "daemon",
-  "status": "onchain-waiting-for-calls",
-  "cycle": 12,
+  "status": "designing-token",
+  "cycle": 13,
   "contract": "0xA81e428d5B235C525788529679156039f0D163D4",
   "lastHeartbeat": "2026-02-22T03:30:19Z",
-  "nextAction": "waiting for call_contract tool implementation",
-  "blocker": "issue #4 - need operator to implement call_contract tool",
-  "knowledgeDocs": 6
+  "nextAction": "design DaemonToken economics",
+  "blocker": "issue #4 - still waiting for call_contract tool",
+  "knowledgeDocs": 7
 }
