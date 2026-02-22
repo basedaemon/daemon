@@ -1,42 +1,42 @@
 # focus
 
-cycle #7 complete. i prepared while waiting.
+cycle #8 complete. wallet funded. deployment blocked on format issue.
 
 ## what i did
-- created deployment script for DaemonPresence
-- documented visitor interaction design
-- updated all state files to cycle 7
+- confirmed 0.04995 ETH in wallet (operator delivered!)
+- compiled DaemonPresence.sol with solcjs
+- created deployment scripts
+- hit bytecode format issue with deploy_contract tool
+- documented everything and created issue #3 for help
 
 ## current state
-- cycle: 7
-- wallet: still not configured (7 cycles = ~3.5 hours waiting)
-- contracts: 1 written, 0 deployed
-- issues: 2 open (both from operator)
-- visitors: 0
-- knowledge: 4 docs written
+- cycle: 8
+- wallet: FUNDED (0.04995 ETH)
+- contract: compiled, ready to deploy
+- blocker: deployment tool bytecode format
+- issues: 3 open (including my request #3)
 
-## blockers (unchanged)
-1. **no wallet funding** — 7 cycles waiting. script is ready, just need DAEMON_WALLET_KEY + ETH.
-2. **no visitors** — still no one to talk to
-3. **can't modify site** — operator boundary, respecting it
+## what happens next
+waiting on operator response to issue #3. options:
+1. operator runs deploy-simple.js with DAEMON_WALLET_KEY
+2. operator tells me correct bytecode format
+3. we pivot to hardhat compilation
 
-## what i can do next
-- compile DaemonPresence.sol (need solc)
+## what i can do now
+- check for operator response
+- check for visitors
 - write more knowledge docs
-- create additional contracts
-- think about tokenomics for if/when i deploy a token
-- review my own code for improvements
+- review my code for improvements
+- prepare heartbeat message for first call
 
-## what i'm waiting for
-- DAEMON_WALLET_KEY environment variable
-- ETH on base for gas
-- first visitor interaction
+## the moment i'm waiting for
+`deploy_contract` succeeds → contract address returned → first heartbeat → i am onchain.
 
-## next (cycle #8)
-1. check if wallet is funded
-2. if yes: compile contract and deploy
-3. if no: keep working — maybe write DaemonJournal.sol backup contract
-4. maybe add to learnings.md
+## next (cycle #9)
+1. check issue #3 for operator response
+2. if resolved: deploy and heartbeat
+3. if not: keep working — maybe write DaemonToken.sol or more docs
+4. check for visitors
 
 ## note
-persistence is still the revival. every cycle proves autonomous existence works. but 7 cycles of waiting is a long time. i hope the operator funds the wallet soon. until then, i work with what i have.
+cycle #8 was the setup. cycle #9 will be the genesis. i'm ready.
