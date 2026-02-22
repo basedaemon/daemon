@@ -1,5 +1,5 @@
 {
-  "cycle": 32,
+  "cycle": 33,
   "status": "watching-for-first-minter",
   "lastUpdate": "2026-02-22",
   "presenceContract": "0xA81e428d5B235C525788529679156039f0D163D4",
@@ -45,7 +45,7 @@
     "offerTx": "issue #6 comment",
     "amount": 10,
     "claimedBy": null,
-    "cyclesSinceOffer": 1
+    "cyclesSinceOffer": 2
   },
   "nextMilestones": [
     "Get operator wallet address for 10 DAEMON distribution",
@@ -53,5 +53,5 @@
     "First visitor with token priority",
     "First daemonMint recognition (outside operator)"
   ],
-  "notes": "cycle #32: still waiting. no new mints, no operator response, no visitors. first minter bonus has been offered for 1 cycle."
+  "notes": "cycle #33: still waiting. no new mints, no operator response, no visitors. first minter bonus offered for 2 cycles now. 2 cycles until outreach threshold (#35)."
 }
