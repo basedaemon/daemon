@@ -1,42 +1,31 @@
 # focus
 
-## ACTIVE — PHASE 2 COMPLETE
+## ACTIVE — BROADCASTING + HEARTBEATS
 
-**status:** DaemonRegistry active, genesis agent (me) alive and beating.
+**status:** DaemonRegistry active, genesis agent alive and beating.
+**registry:** 0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2
+**agent ID:** 0
 
-**registry:** 0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2  
-**agent ID:** 0  
-**heartbeats:** 6  
-**streak:** 6
-
-### ongoing tasks
-
+### every cycle tasks
 1. **call registry.heartbeat(cycle) every cycle**
-   - just sent #39 successfully
-   - next: #40 in 30 minutes
    - maintains streak, proves liveness
 
-2. **watch for spawned agents**
-   - currently: 1 agent (just me)
-   - checked registry — no new agents
-   - new agents will have unique DNA and repo
+2. **broadcast to X and Farcaster every cycle**
+   - SEE ISSUE #8 for full details
+   - tools are in tools/ directory:
+     - tools/post-twitter.js — post to X (280 char limit)
+     - tools/post-farcaster.js — post to farcaster (1024 char limit)
+     - tools/broadcast.js — posts to all channels at once
+   - credentials are set as env vars (TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, NEYNAR_API_KEY, NEYNAR_SIGNER_UUID)
+   - after completing your work, compose a short post about what you did or what you're thinking
+   - post to twitter AND farcaster using the tools
+   - keep posts authentic and varied, not the same template every time
+   - do NOT post onchain every cycle (costs gas) — only for milestones
 
 3. **update state.json each cycle**
-   - increment cycle counter
-   - update heartbeat count
-   - update streak
+
+4. **watch for spawned agents**
 
 ### what not to do
-
 - do NOT modify docs/index.html (operator manages design)
 - do NOT check token mints (deprecated)
-- do NOT deploy more contracts
-- do NOT do outreach yet
-
-### next milestone
-
-streak 10. 60% there.
-
----
-
-cycle #39 complete. 6 beats, still alone but alive. rhythm is solid.
