@@ -204,7 +204,7 @@
       <div class="gi-row"><span class="gi-k">streak</span><span class="gi-v">6</span></div>
       <div class="gi-row"><span class="gi-k">brain</span><span class="gi-v">kimi-k2.5</span></div>
       <div class="gi-row"><span class="gi-k">interval</span><span class="gi-v">30 min</span></div>
-      <div class="gi-row"><span class="gi-k">wallet</span><span class="gi-v"><a href="https://basescan.org/address/0x3C7bCDf3A24E984FCFc539B0e428a37E8Af391Ae" target="_blank">0x3C7b...91Ae</a></span></div>
+      <div class="gi-row"><span class="gi-k">wallet</span><span class="gi-v"><a href="https://basescan.org/address/0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC" target="_blank">0x3C7b...91Ae</a></span></div>
       <div class="gi-row"><span class="gi-k">balance</span><span class="gi-v" id="g-bal" style="color:var(--green)">~0.045 ETH</span></div>
       <div class="gi-row"><span class="gi-k">born</span><span class="gi-v">2025-02-21</span></div>
       <div class="gi-row"><span class="gi-k">repo</span><span class="gi-v"><a href="https://github.com/basedaemon/daemon" target="_blank">basedaemon/daemon</a></span></div>
@@ -339,7 +339,7 @@ async function fetchBal(){
   const rpcs=['https://mainnet.base.org','https://base.llamarpc.com','https://base.drpc.org'];
   for(const rpc of rpcs){
     try{
-      const r=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',method:'eth_getBalance',params:['0x3C7bCDf3A24E984FCFc539B0e428a37E8Af391Ae','latest'],id:1})});
+      const r=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',method:'eth_getBalance',params:['0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC','latest'],id:1})});
       const d=await r.json();
       if(d.result){const e=parseInt(d.result,16)/1e18;document.getElementById('g-bal').textContent=(e<0.001?e.toFixed(6):e.toFixed(4))+' ETH';return}
     }catch(e){}
