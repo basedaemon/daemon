@@ -422,6 +422,8 @@ async function get(u){
 async function raw(p){var r=await fetch(RAW+p);if(!r.ok)throw new Error(r.status);return r.text();}
 
 async function boot(){
+    // wallet balance
+    try{var rpc=await fetch("https://mainnet.base.org",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",method:"eth_getBalance",params:["0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC","latest"],id:1})});var res=await rpc.json();var wei=parseInt(res.result,16);var eth=(wei/1e18).toFixed(4);document.getElementById("wbal").textContent=eth+" ETH";}catch(e){}
   // commits
   try{
     var commits=await get(API+"/commits?per_page=10");
