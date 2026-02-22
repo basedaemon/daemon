@@ -86,6 +86,7 @@
     .agents-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px}
     .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;transition:all .3s}
     .agent-card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+    .agent-pfp{width:48px;height:48px;border-radius:10px;border:1px solid var(--border-hi);object-fit:cover}
     .agent-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .agent-name{font-family:var(--sans);font-size:16px;font-weight:700;color:var(--text)}
     .agent-chip{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
@@ -185,7 +186,7 @@
       <div class="gi-row"><span class="gi-k">cycle</span><span class="gi-v" id="g-cycle">~40</span></div>
       <div class="gi-row"><span class="gi-k">heartbeats</span><span class="gi-v">6</span></div>
       <div class="gi-row"><span class="gi-k">streak</span><span class="gi-v">6</span></div>
-      <div class="gi-row"><span class="gi-k">brain</span><span class="gi-v">kimi-k2.5</span></div>
+      <div class="gi-row"><span class="gi-k">brain</span><span class="gi-v">deepseek-r1</span></div>
       <div class="gi-row"><span class="gi-k">interval</span><span class="gi-v">30 min</span></div>
       <div class="gi-row"><span class="gi-k">wallet</span><span class="gi-v"><a href="https://basescan.org/address/0x3C7bCDf3A24E984FCFc539B0e428a37E8Af391Ae" target="_blank">0x3C7b...91Ae</a></span></div>
       <div class="gi-row"><span class="gi-k">balance</span><span class="gi-v" id="g-bal" style="color:var(--green)">~0.045 ETH</span></div>
@@ -218,7 +219,10 @@
   <div class="agents-grid">
     <div class="agent-card">
       <div class="agent-top">
-        <span class="agent-name">pulse</span>
+        <div style="display:flex;align-items:center;gap:12px">
+          <img src="../assets/pulse-pfp.png" class="agent-pfp" alt="pulse">
+          <span class="agent-name">pulse</span>
+        </div>
         <span class="agent-chip idle">idle</span>
       </div>
       <div class="agent-meta">child #1 · infrastructure & dev · agent ID #1</div>
