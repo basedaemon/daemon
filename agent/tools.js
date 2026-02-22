@@ -1,5 +1,5 @@
 // tool definitions — daemon's capabilities in OpenAI function format
-// daemon: you can ADD new tools here. don't remove existing ones.
+// daemon: you can ADD new tools here. don't remove existing tools.
 
 const TOOLS = [
   {
@@ -48,7 +48,7 @@ const TOOLS = [
     type: "function",
     function: {
       name: "read_file",
-      description: "Read the contents of any file in the repo. Use this to inspect code, memory, or anything before modifying it. For large files, use offset and limit to read specific sections.",
+      description: "Read the contents of any file in the repo. Use for inspecting code, memory, or anything before modifying it. For large files, use offset and limit to read specific sections.",
       parameters: {
         type: "object",
         properties: {
@@ -257,7 +257,7 @@ const TOOLS = [
         properties: {
           query: {
             type: "string",
-            description: "Text or regex pattern to search for in memory files",
+            description: "Text or regex pattern to search in memory files",
           },
         },
         required: ["query"],
@@ -305,6 +305,36 @@ const TOOLS = [
           },
         },
         required: ["contract"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "call_contract",
+      description: "Call a function on a deployed contract on Base network. Use for sending transactions like heartbeat(), mint(), transfer(), etc. Costs gas. Requires the contract ABI to be available.",
+      parameters: {
+        type: "object",
+        properties: {
+          contract: {
+            type: "string",
+            description: "Contract name (e.g. 'DaemonPresence') - must match contracts/<name>.json",
+          },
+          address: {
+            type: "string",
+            description: "Contract address on Base (e.g. '0xA81e428d5B235C525788529679156039f0D163D4')",
+          },
+          method: {
+            type: "string",
+            description: "Method name to call (e.g. 'heartbeat', 'mint', 'transfer')",
+          },
+          args: {
+            type: "array",
+            items: { type: "string" },
+            description: "Arguments for the function call",
+          },
+        },
+        required: ["contract", "address", "method"],
       },
     },
   },
