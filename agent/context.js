@@ -40,6 +40,73 @@ function slimTree() {
   return lines.join("\n");
 }
 
+// check DAEMON token balance for an address
+// uses RPC call to Base network — no wallet required for view functions
+async function checkTokenBalance(address) {
+  try {
+    const tokenAddress = "0x5D19cCe5fAf652e554d9F19dAD79863eFF61d920";
+    const rpc = process.env.BASE_RPC || "https://mainnet.base.org";
+    
+    // balanceOf(address) selector: 0x70a08231
+    const data = "0x70a08231" + address.slice(2).padStart(64, "0");
+    
+    const response = await fetch(rpc, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "eth_call",
+        params: [{ to: tokenAddress, data }, "latest"]
+      })
+    });
+    
+    const result = await response.json();
+    if (result.error) {
+      log(`token balance error for ${address}: ${result.error.message}`);
+      return 0;
+    }
+    
+    // convert hex to decimal and divide by 18 decimals
+    const balanceWei = BigInt(result.result);
+    const balanceTokens = Number(balanceWei) / 1e18;
+    return balanceTokens;
+  } catch (e) {
+    log(`failed to check token balance for ${address}: ${e.message}`);
+    return 0;
+  }
+}
+
+// resolve GitHub username to wallet address
+// checks memory/visitors.json for known mappings
+async function resolveAddress(username) {
+  try {
+    const visitorsRaw = readFile("memory/visitors.json");
+    const visitors = visitorsRaw ? JSON.parse(visitorsRaw).visitors : {};
+    if (visitors[username] && visitors[username].address) {
+      return visitors[username].address;
+    }
+  } catch (e) {
+    log(`failed to resolve address for ${username}: ${e.message}`);
+  }
+  return null;
+}
+
+// get priority score for an issue author
+// higher DAEMON balance = higher priority
+async function getAuthorPriority(username) {
+  const address = await resolveAddress(username);
+  if (!address) return { balance: 0, priority: "none" };
+  
+  const balance = await checkTokenBalance(address);
+  
+  // priority tiers
+  if (balance >= 100) return { balance, priority: "high", tier: 3 };
+  if (balance >= 10) return { balance, priority: "medium", tier: 2 };
+  if (balance > 0) return { balance, priority: "low", tier: 1 };
+  return { balance: 0, priority: "none", tier: 0 };
+}
+
 async function gatherContext() {
   log("gathering context...");
 
@@ -97,7 +164,7 @@ async function gatherContext() {
     log(`failed to fetch issues: ${e.message}`);
   }
 
-  // fetch comments — all operator comments + last 3 others (not 5)
+  // fetch comments and token priorities for visitor issues
   for (const issue of issues) {
     try {
       const comments = await githubAPI(
@@ -118,9 +185,12 @@ async function gatherContext() {
       issue._comments = [];
     }
 
-    // scan visitor issues + comments
+    // check token priority for visitor issues
     const isVisitor = (i) => (i.labels || []).some((l) => l.name === "visitor");
     if (isVisitor(issue)) {
+      issue._priority = await getAuthorPriority(issue.user.login);
+      
+      // scan visitor issues + comments
       const bodyScan = await scanContent(issue.body);
       if (bodyScan.flagged) {
         log(`flagged issue #${issue.number}: ${bodyScan.category}`);
@@ -151,9 +221,19 @@ async function gatherContext() {
     !(i.labels || []).some((l) => ["directive", "visitor"].includes(l.name))
   );
 
+  // sort visitor issues by token priority (highest first)
+  visitorIssues.sort((a, b) => {
+    const tierA = a._priority?.tier || 0;
+    const tierB = b._priority?.tier || 0;
+    return tierB - tierA;
+  });
+
   // format issues — compact. operator comments get full body, others get truncated
   function formatIssue(i, includeBody = true) {
     let out = `#${i.number}: ${i.title} (by @${i.user.login})`;
+    if (i._priority && i._priority.balance > 0) {
+      out += ` [${i._priority.balance.toFixed(2)} DAEMON — ${i._priority.priority} priority]`;
+    }
     if (includeBody && i.body) out += `\n  ${i.body.slice(0, 200)}`;
     if (i._comments && i._comments.length > 0) {
       out += "\n  thread:";
@@ -170,7 +250,7 @@ async function gatherContext() {
       ? `DIRECTIVES (highest priority):\n${directives.map((i) => formatIssue(i)).join("\n\n")}`
       : "",
     visitorIssues.length > 0
-      ? `VISITORS (respond):\n${visitorIssues.map((i) => formatIssue(i)).join("\n\n")}`
+      ? `VISITORS (sorted by token priority):\n${visitorIssues.map((i) => formatIssue(i)).join("\n\n")}`
       : "",
     selfIssues.length > 0
       ? `YOUR ISSUES:\n${selfIssues.map((i) => formatIssue(i, false)).join("\n")}`
@@ -211,4 +291,4 @@ async function gatherContext() {
   };
 }
 
-module.exports = { gatherContext };
+module.exports = { gatherContext, checkTokenBalance, resolveAddress, getAuthorPriority };

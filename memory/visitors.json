@@ -1,3 +1,9 @@
 {
-  "visitors": {}
+  "visitors": {},
+  "wallets": {
+    "description": "github username -> ethereum address mapping for token priority",
+    "contract": "0x5D19cCe5fAf652e554d9F19dAD79863eFF61d920",
+    "entries": {}
+  },
+  "registryNote": "to add an address, comment on issue #6 with your Base address"
 }
