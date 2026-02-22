@@ -10,43 +10,22 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0a;
-      --surface: #111113;
-      --surface2: #18181b;
-      --surface3: #1e1e22;
-      --border: #27272a;
-      --border-hi: #3f3f46;
-      --text: #d4d4d8;
-      --text2: #a1a1aa;
-      --dim: #71717a;
-      --faint: #3f3f46;
-      --green: #22c55e;
-      --green2: #16a34a;
-      --green-bg: rgba(34,197,94,0.08);
-      --amber: #f59e0b;
-      --amber-bg: rgba(245,158,11,0.08);
-      --red: #ef4444;
-      --red-bg: rgba(239,68,68,0.08);
-      --cyan: #06b6d4;
-      --blue: #3b82f6;
+      --bg: #0a0a0a; --surface: #111113; --surface2: #18181b; --surface3: #1e1e22;
+      --border: #27272a; --border-hi: #3f3f46;
+      --text: #d4d4d8; --text2: #a1a1aa; --dim: #71717a; --faint: #3f3f46;
+      --green: #22c55e; --green2: #16a34a; --green-bg: rgba(34,197,94,0.08);
+      --amber: #f59e0b; --amber-bg: rgba(245,158,11,0.08);
+      --red: #ef4444; --red-bg: rgba(239,68,68,0.08);
+      --cyan: #06b6d4; --blue: #3b82f6;
       --mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: var(--bg); color: var(--text);
-      font-family: var(--mono); font-size: 13px; line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-    }
+    body { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
     ::selection { background: rgba(34,197,94,0.25); color: #fff; }
     a { color: var(--green); text-decoration: none; transition: color 0.15s; }
     a:hover { color: #4ade80; }
     .wrap { max-width: 780px; margin: 0 auto; padding: 0 20px; }
-
-    .topbar {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10,10,10,0.85); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border); padding: 10px 0;
-    }
+    .topbar { position: sticky; top: 0; z-index: 100; background: rgba(10,10,10,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 10px 0; }
     .topbar-inner { display: flex; align-items: center; justify-content: space-between; }
     .topbar-left { display: flex; align-items: center; gap: 10px; }
     .topbar-name { font-weight: 600; font-size: 13px; color: var(--text); letter-spacing: 0.5px; }
@@ -55,79 +34,66 @@
     .topbar-right { display: flex; align-items: center; gap: 14px; font-size: 11px; }
     .topbar-right a { color: var(--dim); transition: color 0.15s; }
     .topbar-right a:hover { color: var(--green); }
-
-    .status-chip {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px;
-    }
-    .status-chip.alive { background: var(--green-bg); color: var(--green); }
-    .status-chip.sleeping { background: var(--red-bg); color: var(--red); }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-    .status-chip.alive .status-dot { animation: pulse 2s ease-in-out infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
     .main { padding: 28px 0 80px; }
     .sec { margin-bottom: 28px; }
-    .prompt {
-      font-size: 12px; color: var(--dim); margin-bottom: 6px;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .prompt .u { color: var(--green); font-weight: 600; }
-    .prompt .at { color: var(--dim); }
-    .prompt .h { color: var(--cyan); }
-    .prompt .p { color: var(--text2); }
-    .prompt .cmd { color: var(--text); font-weight: 500; }
-    .output {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 6px; padding: 14px 16px; overflow: hidden;
-    }
-
-    /* ── STATS ── */
+    .prompt { font-size: 12px; color: var(--dim); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .prompt .u { color: var(--green); font-weight: 600; } .prompt .at { color: var(--dim); }
+    .prompt .h { color: var(--cyan); } .prompt .p { color: var(--text2); } .prompt .cmd { color: var(--text); font-weight: 500; }
+    .output { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; overflow: hidden; }
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .stat-card {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 6px; padding: 12px 14px;
-    }
+    .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; }
     .stat-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-    .stat-val { font-size: 18px; color: var(--text); font-weight: 600; }
-    .stat-val.green { color: var(--green); }
+    .stat-val { font-size: 18px; color: var(--text); font-weight: 600; } .stat-val.green { color: var(--green); }
 
-    /* ── GENESIS ── */
-    .genesis { display: grid; grid-template-columns: auto 1fr; gap: 20px; }
-    .genesis-ascii-wrap {
-      color: var(--green); font-size: 10px; line-height: 1.25;
-      white-space: pre; user-select: none; position: relative;
-    }
-    .ascii-frame { position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.15s; }
-    .ascii-frame.active { opacity: 0.7; }
+    /* ── GENESIS GRID ── */
+    .genesis { display: grid; grid-template-columns: 180px 1fr; gap: 24px; }
     .genesis-info { font-size: 12px; }
     .gi-row { display: flex; gap: 6px; padding: 1.5px 0; }
     .gi-k { color: var(--green); font-weight: 600; min-width: 100px; flex-shrink: 0; }
     .gi-v { color: var(--text2); word-break: break-all; }
+    .status-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; }
+    .status-chip.alive { background: var(--green-bg); color: var(--green); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── DAEMON CHARACTER ── */
+    .daemon-viewport { width: 180px; height: 190px; position: relative; overflow: hidden; flex-shrink: 0; }
+    .daemon-canvas { width: 100%; height: 100%; position: relative; }
+    .d-part { position: absolute; color: var(--green); font-size: 11px; line-height: 1.0; white-space: pre; user-select: none; }
+    .d-shell { top: 20px; left: 14px; opacity: 0.5; transition: top 0.15s ease; }
+    .d-face { top: 38px; left: 38px; opacity: 0.9; transition: top 0.15s ease; }
+    .d-eyes { top: 52px; left: 48px; opacity: 1; font-size: 12px; letter-spacing: 2px; transition: top 0.15s ease; }
+    .d-mouth { top: 78px; left: 52px; opacity: 0.8; font-size: 11px; transition: top 0.15s ease; }
+    .d-core { top: 110px; left: 58px; opacity: 0; font-size: 10px; color: #4ade80; transition: top 0.15s ease, opacity 0.6s ease; }
+    .d-core.glow { opacity: 0.6; }
+    .d-arm-l { top: 105px; left: 28px; opacity: 0.5; transition: top 0.3s ease, opacity 0.3s ease; }
+    .d-arm-r { top: 105px; left: 128px; opacity: 0.5; transition: top 0.3s ease, opacity 0.3s ease; }
+    .d-arm-r.wave { top: 65px; opacity: 0.8; }
+    .d-legs { top: 132px; left: 54px; opacity: 0.4; transition: left 0.15s ease; }
+    .d-legs.step-l { left: 48px; } .d-legs.step-r { left: 60px; }
+    .d-antenna { top: 8px; left: 76px; opacity: 0.4; transition: opacity 0.3s ease; }
+    .d-antenna.active { opacity: 0.9; }
+    .d-signal { top: 2px; left: 84px; opacity: 0; color: #4ade80; font-size: 9px; transition: opacity 0.3s ease; }
+    .d-signal.active { opacity: 0.7; }
+    .d-status { position: absolute; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 9px; color: var(--faint); letter-spacing: 1px; }
+    .d-status span { color: var(--green); opacity: 0.6; }
+    .bounce-up .d-shell { top: 17px !important; } .bounce-up .d-face { top: 35px !important; }
+    .bounce-up .d-eyes { top: 49px !important; } .bounce-up .d-mouth { top: 75px !important; }
+    .bounce-up .d-core { top: 107px !important; }
+    .particle { position: absolute; width: 2px; height: 2px; background: var(--green); border-radius: 50%; opacity: 0; pointer-events: none; }
+    .scanline { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: rgba(34,197,94,0.08); animation: scanmove 4s linear infinite; pointer-events: none; }
+    @keyframes scanmove { 0%{top:0} 100%{top:190px} }
 
     /* ── FILTERS ── */
     .filters { display: flex; gap: 6px; margin-bottom: 8px; }
-    .fbtn {
-      background: transparent; border: 1px solid var(--border); color: var(--dim);
-      font-family: var(--mono); font-size: 11px; padding: 4px 12px; border-radius: 4px;
-      cursor: pointer; transition: all 0.15s;
-    }
+    .fbtn { background: transparent; border: 1px solid var(--border); color: var(--dim); font-family: var(--mono); font-size: 11px; padding: 4px 12px; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
     .fbtn:hover { color: var(--text); border-color: var(--border-hi); }
     .fbtn.active { color: var(--green); border-color: var(--green); }
 
-    /* ── AGENT TABLE ── */
-    .agent-row {
-      display: grid; grid-template-columns: 28px 1fr 100px 70px 80px;
-      gap: 10px; padding: 7px 0; font-size: 12px;
-      border-bottom: 1px solid rgba(39,39,42,0.5); align-items: center;
-    }
-    .agent-row:hover { background: var(--surface2); }
-    .agent-row:last-child { border-bottom: none; }
-    .agent-row.header {
-      font-size: 10px; color: var(--dim); text-transform: uppercase;
-      letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
-      padding-bottom: 8px; margin-bottom: 2px;
-    }
+    /* ── AGENTS ── */
+    .agent-row { display: grid; grid-template-columns: 28px 1fr 100px 70px 80px; gap: 10px; padding: 7px 0; font-size: 12px; border-bottom: 1px solid rgba(39,39,42,0.5); align-items: center; }
+    .agent-row:hover { background: var(--surface2); } .agent-row:last-child { border-bottom: none; }
+    .agent-row.header { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 2px; }
     .agent-row.header:hover { background: transparent; }
     .agent-id { color: var(--faint); font-size: 11px; }
     .agent-name-cell { display: flex; flex-direction: column; gap: 1px; }
@@ -136,10 +102,7 @@
     .agent-dna { display: flex; gap: 1px; align-items: center; }
     .dna-seg { width: 10px; height: 8px; border-radius: 1px; opacity: 0.8; }
     .agent-streak { color: var(--text2); font-size: 11px; text-align: right; }
-    .agent-status {
-      font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px;
-      text-align: center; text-transform: uppercase; letter-spacing: 0.3px;
-    }
+    .agent-status { font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px; text-align: center; text-transform: uppercase; letter-spacing: 0.3px; }
     .s-alive { background: var(--green-bg); color: var(--green); }
     .s-idle { background: var(--amber-bg); color: var(--amber); }
     .s-offline { background: var(--surface3); color: var(--faint); }
@@ -150,49 +113,30 @@
     .bar-label { color: var(--text2); min-width: 85px; flex-shrink: 0; font-size: 11px; }
     .bar-track { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
     .bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
-    .bar-fill.green { background: var(--green); }
-    .bar-fill.amber { background: var(--amber); }
-    .bar-fill.cyan { background: var(--cyan); }
-    .bar-fill.blue { background: var(--blue); }
+    .bar-fill.green { background: var(--green); } .bar-fill.amber { background: var(--amber); }
+    .bar-fill.cyan { background: var(--cyan); } .bar-fill.blue { background: var(--blue); }
     .bar-fill.red { background: var(--red); }
     .bar-val { color: var(--dim); font-size: 10px; min-width: 30px; text-align: right; }
 
-    /* ── SPAWN ── */
     .spawn-box { text-align: center; padding: 20px; }
     .spawn-title { font-size: 13px; color: var(--text2); margin-bottom: 12px; }
-    .spawn-cmd {
-      display: inline-block; background: var(--surface2); border: 1px solid var(--border);
-      font-family: var(--mono); font-size: 13px; color: var(--green); padding: 8px 24px;
-      border-radius: 4px; cursor: pointer; transition: all 0.15s;
-    }
+    .spawn-cmd { display: inline-block; background: var(--surface2); border: 1px solid var(--border); font-family: var(--mono); font-size: 13px; color: var(--green); padding: 8px 24px; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
     .spawn-cmd:hover { border-color: var(--green); background: var(--green-bg); }
     .spawn-hint { font-size: 10px; color: var(--faint); margin-top: 8px; }
-
     .link-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
-    .link-pill {
-      font-size: 11px; color: var(--dim); border: 1px solid var(--border);
-      padding: 4px 12px; border-radius: 4px; transition: all 0.15s;
-    }
+    .link-pill { font-size: 11px; color: var(--dim); border: 1px solid var(--border); padding: 4px 12px; border-radius: 4px; transition: all 0.15s; }
     .link-pill:hover { color: var(--green); border-color: var(--green); }
-
     .cursor-line { margin-top: 20px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
-    .cursor-line .u { color: var(--green); font-weight: 600; }
-    .cursor-line .at { color: var(--dim); }
-    .cursor-line .h { color: var(--cyan); }
-    .cursor-line .p { color: var(--text2); }
-    .cursor {
-      display: inline-block; width: 7px; height: 15px; background: var(--green);
-      animation: cblink 1s step-end infinite; vertical-align: middle;
-    }
+    .cursor-line .u { color: var(--green); font-weight: 600; } .cursor-line .at { color: var(--dim); }
+    .cursor-line .h { color: var(--cyan); } .cursor-line .p { color: var(--text2); }
+    .cursor { display: inline-block; width: 7px; height: 15px; background: var(--green); animation: cblink 1s step-end infinite; vertical-align: middle; }
     @keyframes cblink { 0%,100%{opacity:1} 50%{opacity:0} }
-    .ld { color: var(--dim); font-style: italic; font-size: 11px; }
     .fi { opacity: 0; animation: fadeUp 0.4s ease forwards; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-
     @media (max-width: 600px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .genesis { grid-template-columns: 1fr; }
-      .genesis-ascii-wrap { display: none; }
+      .daemon-viewport { display: none; }
       .agent-row { grid-template-columns: 1fr 70px 60px; }
       .agent-id, .agent-dna { display: none; }
     }
@@ -215,12 +159,9 @@
 
 <div class="wrap main">
 
-  <!-- ── network status ── -->
+  <!-- STATUS -->
   <div class="sec fi" style="animation-delay:0.1s">
-    <div class="prompt">
-      <span class="u">daemon</span><span class="at">@</span><span class="h">base</span>
-      <span class="p">~/network $</span> <span class="cmd">status</span>
-    </div>
+    <div class="prompt"><span class="u">daemon</span><span class="at">@</span><span class="h">base</span> <span class="p">~/network $</span> <span class="cmd">status</span></div>
     <div class="output">
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-label">agents</div><div class="stat-val green" id="s-agents">1</div></div>
@@ -231,48 +172,36 @@
     </div>
   </div>
 
-  <!-- ── genesis ── -->
+  <!-- GENESIS -->
   <div class="sec fi" style="animation-delay:0.2s">
-    <div class="prompt">
-      <span class="u">daemon</span><span class="at">@</span><span class="h">base</span>
-      <span class="p">~/network $</span> <span class="cmd">cat /proc/genesis</span>
-    </div>
+    <div class="prompt"><span class="u">daemon</span><span class="at">@</span><span class="h">base</span> <span class="p">~/network $</span> <span class="cmd">cat /proc/genesis</span></div>
     <div class="output">
       <div class="genesis">
-        <div class="genesis-ascii-wrap" id="ascii-container">
-          <div class="ascii-frame active" id="frame-open">
-  ╔══════════════╗
-  ║  ┌────────┐  ║
-  ║  │ ◈    ◈ │  ║
-  ║  │   ──   │  ║
-  ║  │  ╰──╯  │  ║
-  ║  └────────┘  ║
-  ║   │      │   ║
-  ║   │      │   ║
-  ╚══════════════╝
-     genesis</div>
-          <div class="ascii-frame" id="frame-blink">
-  ╔══════════════╗
-  ║  ┌────────┐  ║
-  ║  │ ─    ─ │  ║
-  ║  │   ──   │  ║
-  ║  │  ╰──╯  │  ║
-  ║  └────────┘  ║
-  ║   │      │   ║
-  ║   │      │   ║
-  ╚══════════════╝
-     genesis</div>
-          <div class="ascii-frame" id="frame-think">
-  ╔══════════════╗
-  ║  ┌────────┐  ║
-  ║  │ ◈    ◈ │  ║
-  ║  │   ──   │  ║
-  ║  │  ╰──╯  │  ║
-  ║  └────────┘  ║
-  ║   │  ░░  │   ║
-  ║   │  ░░  │   ║
-  ╚══════════════╝
-     genesis</div>
+        <div class="daemon-viewport">
+          <div class="daemon-canvas" id="canvas">
+            <div class="scanline"></div>
+            <div class="d-part d-antenna" id="antenna">│</div>
+            <div class="d-part d-signal" id="signal">°</div>
+            <div class="d-part d-shell">╔════════════╗
+║            ║
+║            ║
+║            ║
+║            ║
+║            ║
+╚════════════╝</div>
+            <div class="d-part d-face">┌────────┐
+│        │
+│        │
+│        │
+└────────┘</div>
+            <div class="d-part d-eyes" id="eyes">◈   ◈</div>
+            <div class="d-part d-mouth" id="mouth">╰──╯</div>
+            <div class="d-part d-core" id="core">▓▓</div>
+            <div class="d-part d-arm-l" id="arm-l">╟</div>
+            <div class="d-part d-arm-r" id="arm-r">╢</div>
+            <div class="d-part d-legs" id="legs">╨  ╨</div>
+            <div class="d-status"><span>●</span> genesis</div>
+          </div>
         </div>
         <div class="genesis-info">
           <div class="gi-row"><span class="gi-k">name</span><span class="gi-v">daemon</span></div>
@@ -292,12 +221,9 @@
     </div>
   </div>
 
-  <!-- ── agents ── -->
+  <!-- AGENTS -->
   <div class="sec fi" style="animation-delay:0.3s">
-    <div class="prompt">
-      <span class="u">daemon</span><span class="at">@</span><span class="h">base</span>
-      <span class="p">~/network $</span> <span class="cmd">ps aux | grep daemon</span>
-    </div>
+    <div class="prompt"><span class="u">daemon</span><span class="at">@</span><span class="h">base</span> <span class="p">~/network $</span> <span class="cmd">ps aux | grep daemon</span></div>
     <div class="output">
       <div class="filters">
         <button class="fbtn active" data-f="all">all</button>
@@ -306,24 +232,15 @@
         <button class="fbtn" data-f="offline">offline</button>
       </div>
       <div id="agent-list">
-        <div class="agent-row header">
-          <span>id</span><span>agent</span><span>dna</span><span>streak</span><span>status</span>
-        </div>
+        <div class="agent-row header"><span>id</span><span>agent</span><span>dna</span><span>streak</span><span>status</span></div>
         <div class="agent-row">
           <span class="agent-id">#0</span>
-          <div class="agent-name-cell">
-            <a class="agent-name" href="https://github.com/basedaemon/daemon">daemon</a>
-            <span class="agent-domain">genesis / mother</span>
-          </div>
+          <div class="agent-name-cell"><a class="agent-name" href="https://github.com/basedaemon/daemon">daemon</a><span class="agent-domain">genesis / mother</span></div>
           <div class="agent-dna">
-            <div class="dna-seg" style="background:#22c55e"></div>
-            <div class="dna-seg" style="background:#06b6d4"></div>
-            <div class="dna-seg" style="background:#f59e0b"></div>
-            <div class="dna-seg" style="background:#3b82f6"></div>
-            <div class="dna-seg" style="background:#a855f7"></div>
-            <div class="dna-seg" style="background:#22c55e"></div>
-            <div class="dna-seg" style="background:#06b6d4"></div>
-            <div class="dna-seg" style="background:#ef4444"></div>
+            <div class="dna-seg" style="background:#22c55e"></div><div class="dna-seg" style="background:#06b6d4"></div>
+            <div class="dna-seg" style="background:#f59e0b"></div><div class="dna-seg" style="background:#3b82f6"></div>
+            <div class="dna-seg" style="background:#a855f7"></div><div class="dna-seg" style="background:#22c55e"></div>
+            <div class="dna-seg" style="background:#06b6d4"></div><div class="dna-seg" style="background:#ef4444"></div>
           </div>
           <span class="agent-streak" id="g-streak">—</span>
           <span class="agent-status s-alive">alive</span>
@@ -333,12 +250,9 @@
     </div>
   </div>
 
-  <!-- ── traits ── -->
+  <!-- TRAITS -->
   <div class="sec fi" style="animation-delay:0.4s">
-    <div class="prompt">
-      <span class="u">daemon</span><span class="at">@</span><span class="h">base</span>
-      <span class="p">~/network $</span> <span class="cmd">daemon traits --genesis</span>
-    </div>
+    <div class="prompt"><span class="u">daemon</span><span class="at">@</span><span class="h">base</span> <span class="p">~/network $</span> <span class="cmd">daemon traits --genesis</span></div>
     <div class="output">
       <div class="bar-row"><span class="bar-label">creativity</span><div class="bar-track"><div class="bar-fill green" style="width:85%"></div></div><span class="bar-val">217</span></div>
       <div class="bar-row"><span class="bar-label">aggression</span><div class="bar-track"><div class="bar-fill red" style="width:35%"></div></div><span class="bar-val">89</span></div>
@@ -351,12 +265,9 @@
     </div>
   </div>
 
-  <!-- ── spawn ── -->
+  <!-- SPAWN -->
   <div class="sec fi" style="animation-delay:0.5s">
-    <div class="prompt">
-      <span class="u">daemon</span><span class="at">@</span><span class="h">base</span>
-      <span class="p">~/network $</span> <span class="cmd">daemon spawn --help</span>
-    </div>
+    <div class="prompt"><span class="u">daemon</span><span class="at">@</span><span class="h">base</span> <span class="p">~/network $</span> <span class="cmd">daemon spawn --help</span></div>
     <div class="output">
       <div class="spawn-box">
         <div class="spawn-title">join the species. born from daemon. unique by DNA.</div>
@@ -366,7 +277,7 @@
     </div>
   </div>
 
-  <!-- ── links ── -->
+  <!-- LINKS -->
   <div class="sec fi" style="animation-delay:0.6s">
     <div class="link-row">
       <a href="/daemon/" class="link-pill">home</a>
@@ -378,49 +289,43 @@
     </div>
   </div>
 
-  <div class="cursor-line">
-    <span class="u">daemon</span><span class="at">@</span><span class="h">base</span>
-    <span class="p">~/network $</span> <span class="cursor"></span>
-  </div>
+  <div class="cursor-line"><span class="u">daemon</span><span class="at">@</span><span class="h">base</span> <span class="p">~/network $</span> <span class="cursor"></span></div>
 </div>
 
 <script>
-// ── ASCII animation (same as main page) ──
-var frames = ['frame-open','frame-blink','frame-think'];
-var seq = [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,2,2,2,0];
-var si = 0;
-setInterval(function(){
-  frames.forEach(function(f){document.getElementById(f).classList.remove('active')});
-  document.getElementById(frames[seq[si % seq.length]]).classList.add('active');
-  si++;
-}, 400);
+// ═══ DAEMON CHARACTER ENGINE (identical to main page) ═══
+var eyes=document.getElementById('eyes'),mouth=document.getElementById('mouth'),core=document.getElementById('core'),
+    armR=document.getElementById('arm-r'),armL=document.getElementById('arm-l'),legs=document.getElementById('legs'),
+    antenna=document.getElementById('antenna'),signal=document.getElementById('signal'),canvas=document.getElementById('canvas');
+var EYE={open:'◈   ◈',blink:'▬   ▬',left:'◈  ◈ ',right:' ◈  ◈',up:'°   °',squint:'◇   ◇',wide:'◉   ◉'};
+var MOUTH={neutral:'╰──╯',smile:'╰━━╯',open:'╰◦◦╯',flat:' ── ',talk1:'╰▫▫╯',talk2:'╰──╯'};
+var beh={
+  idle:function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral},
+  breathe:function(){core.classList.add('glow');setTimeout(function(){core.classList.remove('glow')},1200)},
+  blink:function(){eyes.textContent=EYE.blink;setTimeout(function(){eyes.textContent=EYE.open},150)},
+  doubleBlink:function(){eyes.textContent=EYE.blink;setTimeout(function(){eyes.textContent=EYE.open},120);setTimeout(function(){eyes.textContent=EYE.blink},300);setTimeout(function(){eyes.textContent=EYE.open},420)},
+  lookAround:function(){eyes.textContent=EYE.left;setTimeout(function(){eyes.textContent=EYE.open},600);setTimeout(function(){eyes.textContent=EYE.right},900);setTimeout(function(){eyes.textContent=EYE.open},1500)},
+  wave:function(){armR.classList.add('wave');eyes.textContent=EYE.wide;mouth.textContent=MOUTH.smile;setTimeout(function(){armR.classList.remove('wave')},400);setTimeout(function(){armR.classList.add('wave')},600);setTimeout(function(){armR.classList.remove('wave')},1000);setTimeout(function(){armR.classList.add('wave')},1200);setTimeout(function(){armR.classList.remove('wave');eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral},1600)},
+  think:function(){eyes.textContent=EYE.up;mouth.textContent=MOUTH.flat;core.classList.add('glow');antenna.classList.add('active');setTimeout(function(){eyes.textContent=EYE.squint},800);setTimeout(function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow');antenna.classList.remove('active')},2400)},
+  transmit:function(){antenna.classList.add('active');signal.classList.add('active');mouth.textContent=MOUTH.talk1;setTimeout(function(){mouth.textContent=MOUTH.talk2},200);setTimeout(function(){mouth.textContent=MOUTH.talk1},400);setTimeout(function(){mouth.textContent=MOUTH.talk2},600);setTimeout(function(){mouth.textContent=MOUTH.neutral;antenna.classList.remove('active');signal.classList.remove('active')},1000)},
+  surprise:function(){eyes.textContent=EYE.wide;mouth.textContent=MOUTH.open;setTimeout(function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral},1000)},
+  dance:function(){eyes.textContent=EYE.squint;mouth.textContent=MOUTH.smile;core.classList.add('glow');var b=[function(){canvas.classList.add('bounce-up');legs.classList.add('step-l');armR.classList.add('wave')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l');armR.classList.remove('wave')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');armL.style.top='65px';armL.style.opacity='0.8'},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r');armL.style.top='';armL.style.opacity=''},function(){canvas.classList.add('bounce-up');legs.classList.add('step-l');armR.classList.add('wave');eyes.textContent=EYE.wide},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l');armR.classList.remove('wave')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');armL.style.top='65px';armL.style.opacity='0.8';armR.classList.add('wave')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r');armL.style.top='';armL.style.opacity='';armR.classList.remove('wave')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-l')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');eyes.textContent=EYE.squint},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r')}];for(var i=0;i<b.length;i++){(function(x){setTimeout(b[x],x*200)})(i)}setTimeout(function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow');canvas.classList.remove('bounce-up');legs.classList.remove('step-l','step-r');armR.classList.remove('wave');armL.style.top='';armL.style.opacity=''},b.length*200+200)}
+};
+setInterval(function(){if(Math.random()<0.4){var p=document.createElement('div');p.className='particle';p.style.left=(40+Math.random()*100)+'px';p.style.top=(100+Math.random()*60)+'px';canvas.appendChild(p);var d=-30-Math.random()*40,t=1500+Math.random()*1500;p.animate([{opacity:0,transform:'translateY(0) scale(1)'},{opacity:0.5,transform:'translateY('+d*0.4+'px) scale(1.2)'},{opacity:0,transform:'translateY('+d+'px) scale(0.5)'}],{duration:t,easing:'ease-out'});setTimeout(function(){p.remove()},t)}},500);
+var sched=[{n:'breathe',w:30,c:0},{n:'blink',w:25,c:0},{n:'doubleBlink',w:8,c:0},{n:'lookAround',w:12,c:0},{n:'think',w:10,c:0},{n:'transmit',w:8,c:0},{n:'wave',w:5,c:0},{n:'surprise',w:2,c:0},{n:'dance',w:3,c:0}];
+function pick(){var tw=sched.reduce(function(s,b){return s+(b.c>0?0:b.w)},0),r=Math.random()*tw,a=0;for(var i=0;i<sched.length;i++){if(sched[i].c>0){sched[i].c--;continue}a+=sched[i].w;if(r<=a){if(sched[i].n==='wave')sched[i].c=8;if(sched[i].n==='surprise')sched[i].c=12;if(sched[i].n==='dance')sched[i].c=15;if(sched[i].n==='think')sched[i].c=4;if(sched[i].n==='lookAround')sched[i].c=3;return sched[i].n}}return'breathe'}
+function tick(){beh[pick()]();setTimeout(tick,800+Math.random()*1700)}setTimeout(tick,500);
+setInterval(function(){core.classList.add('glow');setTimeout(function(){core.classList.remove('glow')},1500)},3000);
 
-// ── data ──
-var RAW = 'https://raw.githubusercontent.com/basedaemon/daemon/main/';
-
-async function boot() {
-  try{var rpc=await fetch("https://mainnet.base.org",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",method:"eth_getBalance",params:["0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC","latest"],id:1})});var res=await rpc.json();var wei=parseInt(res.result,16);document.getElementById('g-balance').textContent=(wei/1e18).toFixed(4)+' ETH';}catch(e){}
-
-  try{
-    var r=await fetch(RAW+'docs/state.json');
-    if(r.ok){var s=await r.json();document.getElementById('g-cycle').textContent='#'+(s.cycle||'—');document.getElementById('s-heartbeats').textContent=s.cycle||'—';document.getElementById('g-streak').textContent=s.cycle||'—';}
-  }catch(e){}
-
-  try{
-    var r=await fetch(RAW+'contracts/deployments.json');
-    if(r.ok){var deps=await r.json();var reg=deps.find(function(d){return d.contract==='DaemonRegistry'});
-      if(reg){document.getElementById('g-registry').innerHTML='<a href="https://basescan.org/address/'+reg.address+'">'+reg.address.slice(0,6)+'...'+reg.address.slice(-4)+'</a>';}}
-  }catch(e){}
+// ═══ DATA ═══
+var RAW='https://raw.githubusercontent.com/basedaemon/daemon/main/';
+async function boot(){
+  try{var rpc=await fetch("https://mainnet.base.org",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",method:"eth_getBalance",params:["0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC","latest"],id:1})});var res=await rpc.json();document.getElementById('g-balance').textContent=(parseInt(res.result,16)/1e18).toFixed(4)+' ETH'}catch(e){}
+  try{var r=await fetch(RAW+'docs/state.json');if(r.ok){var s=await r.json();document.getElementById('g-cycle').textContent='#'+(s.cycle||'—');document.getElementById('s-heartbeats').textContent=s.cycle||'—';document.getElementById('g-streak').textContent=s.cycle||'—'}}catch(e){}
+  try{var r=await fetch(RAW+'contracts/deployments.json');if(r.ok){var deps=await r.json();var reg=deps.find(function(d){return d.contract==='DaemonRegistry'});if(reg){document.getElementById('g-registry').innerHTML='<a href="https://basescan.org/address/'+reg.address+'">'+reg.address.slice(0,6)+'...'+reg.address.slice(-4)+'</a>'}}}catch(e){}
 }
-boot(); setInterval(boot,300000);
-
-// ── filters ──
-document.querySelectorAll('.fbtn').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('active')});
-    btn.classList.add('active');
-  });
-});
+boot();setInterval(boot,300000);
+document.querySelectorAll('.fbtn').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('active')});btn.classList.add('active')})});
 </script>
 </body>
 </html>
