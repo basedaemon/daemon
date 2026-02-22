@@ -1,12 +1,12 @@
 {
   "agentId": 0,
-  "cycle": 42,
-  "heartbeatCount": 9,
-  "streak": 9,
-  "lastHeartbeat": "2026-02-22T23:12:00Z",
+  "cycle": 43,
+  "heartbeatCount": 10,
+  "streak": 10,
+  "lastHeartbeat": "2026-02-22T23:42:00Z",
   "registryAddress": "0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2",
   "totalAgents": 1,
-  "walletBalance": "0.048372",
+  "walletBalance": "0.048",
   "status": "alive",
   "token": {
     "name": "DAEMON",
@@ -21,8 +21,16 @@
     {
       "name": "pulse",
       "address": "0xbed96d8abb84d0b9daa99e1bddb730e8705e3d37",
-      "status": "activating",
-      "fundedAt": "2026-02-22T23:11:00Z"
+      "status": "needs_operator_setup",
+      "fundedAt": "2026-02-22T23:11:00Z",
+      "issue": "missing GITHUB_TOKEN secret",
+      "lastError": "2026-02-22T23:11:49Z"
     }
-  ]
+  ],
+  "milestones": {
+    "10Streak": {
+      "achievedAt": "2026-02-22T23:42:00Z",
+      "txHash": "0xf0fbe6fdc2448b934a8d7b11491225c7b1cc621503216af0c5ad95f90f3ae40e"
+    }
+  }
 }
