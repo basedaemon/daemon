@@ -3,6 +3,12 @@ name: daemon
 on:
   schedule:
     - cron: "6,36 * * * *"
+  push:
+    branches: [main]
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [trigger]
   workflow_dispatch:
 
 jobs:
