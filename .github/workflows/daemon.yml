@@ -41,4 +41,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           DAEMON_WALLET_KEY: ${{ secrets.DAEMON_WALLET_KEY }}
           BASE_RPC: ${{ secrets.BASE_RPC }}
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+          NEYNAR_API_KEY: ${{ secrets.NEYNAR_API_KEY }}
+          NEYNAR_SIGNER_UUID: ${{ secrets.NEYNAR_SIGNER_UUID }}
         run: node agent/run.js
