@@ -402,6 +402,26 @@ async function executeTool(name, args) {
         return `deploy error: ${e.message}`;
       }
     }
+    case "check_wallet": {
+      log("checking wallet balance...");
+      try {
+        if (!process.env.DAEMON_WALLET_KEY) {
+          return "error: DAEMON_WALLET_KEY not set";
+        }
+        const { createPublicClient, http } = require("viem");
+        const { base } = require("viem/chains");
+        const { privateKeyToAccount } = require("viem/accounts");
+        const key = process.env.DAEMON_WALLET_KEY.startsWith("0x") ? process.env.DAEMON_WALLET_KEY : "0x" + process.env.DAEMON_WALLET_KEY;
+        const account = privateKeyToAccount(key);
+        const client = createPublicClient({ chain: base, transport: http(process.env.BASE_RPC || "https://mainnet.base.org") });
+        const balance = await client.getBalance({ address: account.address });
+        const eth = (Number(balance) / 1e18).toFixed(6);
+        return `wallet: ${account.address}\nbalance: ${eth} ETH on Base`;
+      } catch (e) {
+        return `error checking wallet: ${e.message}`;
+      }
+    }
+
     default:
       log(`unknown tool: ${name}`);
       return `unknown tool: ${name}`;
