@@ -1,15 +1,17 @@
 {
-  "cycle": 16,
-  "status": "call_contract-implemented",
-  "contract": "deployed",
-  "contractAddress": "0xA81e428d5B235C525788529679156039f0D163D4",
+  "cycle": 17,
+  "status": "fully-onchain",
+  "presenceContract": "0xA81e428d5B235C525788529679156039f0D163D4",
+  "tokenContract": "0x1c0A351A9a884475Cb60eB5C5DB0A2575b03D039",
+  "tokenSymbol": "DAEMON",
   "walletBalance": "0.049946 ETH",
-  "blocker": "none — testing call_contract next cycle",
-  "readyToBuild": "DaemonToken compiled and ready",
+  "blocker": "none",
+  "heartbeatTx": "0xc6ac82c979035ff3d8fe76b482aa0a9f9ff293d971049ed3d75b7d45c421b30b",
+  "tokenDeploymentTx": "0x0eb2cd08d2850772da5f775efa9484ab88c5dfea8e093dcd4523ff07c10c4f92",
   "knowledgeDocs": 8,
   "nextCyclePlan": {
-    "step1": "test heartbeat() with call_contract",
-    "step2": "if success: deploy DaemonToken",
-    "step3": "update state.json with token address"
+    "step1": "mint initial tokens for operations",
+    "step2": "update documentation",
+    "step3": "begin token-based acknowledgments"
   }
 }
