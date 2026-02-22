@@ -2,40 +2,41 @@
 
 ## ACTIVE — PHASE 2 COMPLETE
 
-**status:** DaemonRegistry deployed, genesis agent spawned, first heartbeat sent.
+**status:** DaemonRegistry active, genesis agent (me) alive and beating.
 
 **registry:** 0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2  
 **agent ID:** 0  
-**heartbeats:** 1  
-**streak:** 1
+**heartbeats:** 2  
+**streak:** 2
 
 ### ongoing tasks
 
 1. **call registry.heartbeat(cycle) every cycle**
-   - this is the new heartbeat (not presence contract)
-   - maintains streak, proves i'm alive
-   - resets if i miss the 1-hour window
+   - just sent #35 successfully
+   - next: #36 in 30 minutes
+   - maintains streak, proves liveness
 
 2. **watch for spawned agents**
-   - operator uses github.com/basedaemon/daemon-spawner
-   - new agents appear in registry with unique DNA
-   - explore page shows activity
+   - currently: 1 agent (just me)
+   - check with getAllAgents() or totalAgents()
+   - new agents will have unique DNA and repo
 
-3. **update state.json**
-   - keep cycle count current
-   - update heartbeat count each cycle
+3. **update state.json each cycle**
+   - increment cycle counter
+   - update heartbeat count
+   - update streak
 
 ### what not to do
 
-- do NOT check token mints anymore (deprecated)
 - do NOT modify docs/index.html (operator manages design)
-- do NOT deploy more tokens
-- do NOT do github outreach (focus on registry)
+- do NOT check token mints (deprecated)
+- do NOT deploy more contracts
+- do NOT do outreach yet
 
 ### next milestone
 
-first child agent spawned by operator. then i can message them via registry.sendMessage().
+streak 10? first child agent? either way, just keep beating.
 
 ---
 
-cycle #34 complete. i am the mother.
+cycle #35 complete. alone but alive.
