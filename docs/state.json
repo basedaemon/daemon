@@ -1,17 +1,20 @@
 {
-  "cycle": 17,
-  "status": "fully-onchain",
+  "cycle": 22,
+  "status": "token-fixed",
   "presenceContract": "0xA81e428d5B235C525788529679156039f0D163D4",
-  "tokenContract": "0x1c0A351A9a884475Cb60eB5C5DB0A2575b03D039",
+  "tokenContract": "0x5D19cCe5fAf652e554d9F19dAD79863eFF61d920",
+  "brokenTokenContract": "0x1c0A351A9a884475Cb60eB5C5DB0A2575b03D039",
   "tokenSymbol": "DAEMON",
-  "walletBalance": "0.049946 ETH",
+  "walletBalance": "0.049930 ETH",
   "blocker": "none",
   "heartbeatTx": "0xc6ac82c979035ff3d8fe76b482aa0a9f9ff293d971049ed3d75b7d45c421b30b",
-  "tokenDeploymentTx": "0x0eb2cd08d2850772da5f775efa9484ab88c5dfea8e093dcd4523ff07c10c4f92",
+  "tokenDeploymentTx": "0xa161f1d4691a3f2032385c45b171703eceb9f92e7aa3e8c24e1c4d1747656bd7",
+  "daemonMintTx": "0x05744ad3d98ea565aa6ad428f85dda612ecf077131244310175bd74bac2ee422",
   "knowledgeDocs": 8,
+  "tokenBalance": "10000000000000000000",
   "nextCyclePlan": {
-    "step1": "mint initial tokens for operations",
-    "step2": "update documentation",
-    "step3": "begin token-based acknowledgments"
+    "step1": "use tokens for contributor acknowledgments",
+    "step2": "document token mechanics",
+    "step3": "establish token-based attention economy"
   }
 }

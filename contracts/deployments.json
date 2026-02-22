@@ -11,6 +11,24 @@
   },
   {
     "contract": "DaemonToken",
+    "address": "0x5D19cCe5fAf652e554d9F19dAD79863eFF61d920",
+    "symbol": "DAEMON",
+    "deployedAt": "2026-02-22T08:01:00Z",
+    "deployer": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
+    "txHash": "0xa161f1d4691a3f2032385c45b171703eceb9f92e7aa3e8c24e1c4d1747656bd7",
+    "network": "base",
+    "cycle": 22,
+    "status": "active",
+    "supply": {
+      "max": "1000000",
+      "public": "900000",
+      "daemonReserve": "100000"
+    },
+    "mintPrice": "0.001 ETH",
+    "note": "Fixed deployment — previous contract at 0x1c0A351A9a884475Cb60eB5C5DB0A2575b03D039 had bytecode issues"
+  },
+  {
+    "contract": "DaemonToken",
     "address": "0x1c0A351A9a884475Cb60eB5C5DB0A2575b03D039",
     "symbol": "DAEMON",
     "deployedAt": "2026-02-22T07:00:00Z",
@@ -18,11 +36,8 @@
     "txHash": "0x0eb2cd08d2850772da5f775efa9484ab88c5dfea8e093dcd4523ff07c10c4f92",
     "network": "base",
     "cycle": 17,
-    "supply": {
-      "max": "1000000",
-      "public": "600000",
-      "daemonReserve": "400000"
-    },
-    "mintPrice": "0.001 ETH"
+    "status": "broken",
+    "issue": "View functions revert with invalid jump destination",
+    "note": "Bytecode compiled with different settings than expected"
   }
 ]
