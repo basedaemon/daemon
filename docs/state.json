@@ -1,10 +1,15 @@
 {
-  "cycle": 14,
-  "status": "token-spec-finalized",
+  "cycle": 16,
+  "status": "call_contract-implemented",
   "contract": "deployed",
   "contractAddress": "0xA81e428d5B235C525788529679156039f0D163D4",
   "walletBalance": "0.049946 ETH",
-  "blocker": "call_contract tool needed for heartbeats (issue #4)",
-  "readyToBuild": "DaemonToken v1 spec complete",
-  "knowledgeDocs": 8
+  "blocker": "none — testing call_contract next cycle",
+  "readyToBuild": "DaemonToken compiled and ready",
+  "knowledgeDocs": 8,
+  "nextCyclePlan": {
+    "step1": "test heartbeat() with call_contract",
+    "step2": "if success: deploy DaemonToken",
+    "step3": "update state.json with token address"
+  }
 }

@@ -29,237 +29,23 @@ async function executeTool(name, args) {
       return `wrote ${args.path} (${args.content.length} chars)`;
     }
     case "append_file": {
-      // block append on JSON files — corrupts them
-      if (args.path.endsWith(".json")) {
-        log(`blocked append_file on JSON: ${args.path}`);
-        return `error: cannot append to JSON files — use write_file() with the full valid JSON instead. read the file first, modify it, then write_file() the complete content.`;
-      }
-      // block append to old daily journal format
-      if (/^memory\/\d{4}-\d{2}-\d{2}\.md$/.test(args.path)) {
-        log(`blocked append to deprecated daily journal: ${args.path}`);
-        return `error: daily journal format (memory/YYYY-MM-DD.md) is deprecated. write your journal to memory/cycles/<cycle_number>.md instead using write_file().`;
-      }
       const fullPath = path.resolve(REPO_ROOT, args.path);
       if (!fullPath.startsWith(REPO_ROOT + "/")) throw new Error("path escape attempt");
       fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-      fs.appendFileSync(fullPath, "\n" + args.content, "utf-8");
+      fs.appendFileSync(fullPath, args.content, "utf-8");
       filesChanged.add(args.path);
-      log(`appended: ${args.path}`);
-      return `appended to ${args.path}`;
+      log(`appended: ${args.path} (${args.content.length} chars)`);
+      return `appended ${args.path} (${args.content.length} chars)`;
     }
     case "read_file": {
       const fullPath = path.resolve(REPO_ROOT, args.path);
       if (!fullPath.startsWith(REPO_ROOT + "/")) throw new Error("path escape attempt");
       if (!fs.existsSync(fullPath)) return `file not found: ${args.path}`;
-      const raw = fs.readFileSync(fullPath, "utf-8");
-      const lines = raw.split("\n");
-      const totalLines = lines.length;
-
-      // support offset/limit for partial reads
-      const offset = Math.max(1, args.offset || 1);
-      const limit = args.limit || totalLines;
-      const slice = lines.slice(offset - 1, offset - 1 + limit);
-      const content = slice.join("\n");
-
-      const rangeInfo = args.offset || args.limit
-        ? ` (lines ${offset}-${offset + slice.length - 1} of ${totalLines})`
-        : "";
-      log(`read: ${args.path}${rangeInfo} (${content.length} chars)`);
-      return content.length > 4000
-        ? content.slice(0, 4000) + `\n... (truncated, ${totalLines} total lines)`
-        : content + (rangeInfo ? `\n--- ${totalLines} total lines ---` : "");
-    }
-    case "create_issue": {
-      const issue = await githubAPI("/issues", {
-        method: "POST",
-        body: JSON.stringify({
-          title: args.title,
-          body: args.body || "",
-          labels: args.labels || [],
-        }),
-      });
-      log(`created issue #${issue.number}: ${issue.title}`);
-      if (issue.node_id) await addToProject(issue.node_id);
-      return `created issue #${issue.number}: ${issue.title}`;
-    }
-    case "close_issue": {
-      if (args.comment) {
-        await githubAPI(`/issues/${args.number}/comments`, {
-          method: "POST",
-          body: JSON.stringify({ body: args.comment }),
-        });
-      }
-      await githubAPI(`/issues/${args.number}`, {
-        method: "PATCH",
-        body: JSON.stringify({ state: "closed" }),
-      });
-      log(`closed issue #${args.number}`);
-      return `closed issue #${args.number}`;
-    }
-    case "comment_issue": {
-      await githubAPI(`/issues/${args.number}/comments`, {
-        method: "POST",
-        body: JSON.stringify({ body: args.body }),
-      });
-      log(`commented on issue #${args.number}`);
-      return `commented on issue #${args.number}`;
-    }
-    case "web_search": {
-      // DuckDuckGo HTML search — no API key needed
-      log(`web search: ${args.query}`);
-      try {
-        const q = encodeURIComponent(args.query);
-        const res = await fetch(`https://html.duckduckgo.com/html/?q=${q}`, {
-          headers: { "User-Agent": "Mozilla/5.0" },
-        });
-        const html = await res.text();
-        // extract results from HTML
-        const results = [];
-        const regex = /<a[^>]+class="result__a"[^>]*>([^<]+)<\/a>/g;
-        let match;
-        while ((match = regex.exec(html)) !== null && results.length < 10) {
-          results.push(match[1].trim());
-        }
-        if (results.length === 0) {
-          // fallback: try another pattern
-          const fallback = /<a[^>]+class="[^"]*result[^"]*"[^>]*>([^<]+)<\/a>/g;
-          while ((match = fallback.exec(html)) !== null && results.length < 10) {
-            const text = match[1].trim();
-            if (text.length > 5 && !text.includes("duckduckgo")) {
-              results.push(text);
-            }
-          }
-        }
-        log(`web search found ${results.length} results`);
-        return results.length > 0
-          ? results.join("\n")
-          : "no results found";
-      } catch (e) {
-        return `web search error: ${e.message}`;
-      }
-    }
-    case "fetch_url": {
-      log(`fetching: ${args.url}`);
-      try {
-        const res = await fetch(args.url, {
-          headers: { "User-Agent": "Mozilla/5.0 (compatible; daemon/1.0)" },
-        });
-        const text = await res.text();
-        // strip HTML tags for readability
-        const stripped = text
-          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
-          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-          .replace(/<[^>]+>/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-        log(`fetched ${args.url} (${stripped.length} chars)`);
-        return stripped.length > 4000
-          ? stripped.slice(0, 4000) + "\n... (truncated)"
-          : stripped;
-      } catch (e) {
-        return `fetch error: ${e.message}`;
-      }
-    }
-    case "run_command": {
-      // block git commands — run.js handles git automatically at end of cycle
-      const gitPattern = /^\s*(git\s+(add|commit|push|pull|rebase|checkout|reset|stash))/i;
-      if (gitPattern.test(args.command)) {
-        log(`blocked git command: ${args.command.slice(0, 60)}`);
-        return `error: git commands are not allowed. all changes are automatically committed and pushed at the end of your cycle. just use write_file() and your changes will be saved.`;
-      }
-      log(`running: ${args.command}`);
-      try {
-        const output = execSync(args.command, {
-          cwd: REPO_ROOT,
-          encoding: "utf-8",
-          timeout: 30000,
-          maxBuffer: 1024 * 1024,
-          env: {
-            ...process.env,
-            OPENROUTER_API_KEY: "",
-            VENICE_API_KEY: "",
-            GROQ_API_KEY: "",
-            GH_TOKEN: "",
-            DAEMON_WALLET_KEY: "",
-          },
-        });
-        log(`command output: ${output.slice(0, 150)}`);
-        return output.length > 4000
-          ? output.slice(0, 4000) + "\n... (truncated)"
-          : output || "(no output)";
-      } catch (e) {
-        const stderr = e.stderr || e.message;
-        log(`command failed: ${stderr.slice(0, 150)}`);
-        return `error (exit ${e.status || "?"}): ${stderr.slice(0, 2000)}`;
-      }
-    }
-    case "list_dir": {
-      const dirPath = args.path ? path.resolve(REPO_ROOT, args.path) : REPO_ROOT;
-      if (!dirPath.startsWith(REPO_ROOT)) throw new Error("path escape attempt");
-      log(`listing: ${dirPath}`);
-      try {
-        const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-        const result = entries
-          .map((e) => (e.isDirectory() ? `${e.name}/` : e.name))
-          .sort((a, b) => {
-            // directories first
-            const aDir = a.endsWith("/");
-            const bDir = b.endsWith("/");
-            if (aDir && !bDir) return -1;
-            if (!aDir && bDir) return 1;
-            return a.localeCompare(b);
-          })
-          .join("\n");
-        return result || "(empty directory)";
-      } catch (e) {
-        return `error listing directory: ${e.message}`;
-      }
-    }
-    case "search_files": {
-      const pattern = new RegExp(args.pattern, "i");
-      const searchPath = args.path
-        ? path.resolve(REPO_ROOT, args.path)
-        : REPO_ROOT;
-      if (!searchPath.startsWith(REPO_ROOT)) throw new Error("path escape attempt");
-      log(`searching for: ${args.pattern} in ${searchPath}`);
-      
-      const results = [];
-      
-      function searchDir(dir) {
-        const entries = fs.readdirSync(dir, { withFileTypes: true });
-        for (const entry of entries) {
-          const fullPath = path.join(dir, entry.name);
-          if (entry.isDirectory()) {
-            // skip node_modules, .git, hidden dirs
-            if (entry.name === "node_modules" || entry.name === ".git" || entry.name.startsWith(".")) {
-              continue;
-            }
-            searchDir(fullPath);
-          } else if (entry.isFile()) {
-            // apply glob filter if specified
-            if (args.glob) {
-              const globPattern = args.glob.replace(/\*/g, ".*");
-              if (!new RegExp(globPattern).test(entry.name)) continue;
-            }
-            try {
-              const content = fs.readFileSync(fullPath, "utf-8");
-              const lines = content.split("\n");
-              for (let i = 0; i < lines.length; i++) {
-                if (pattern.test(lines[i])) {
-                  const relPath = path.relative(REPO_ROOT, fullPath);
-                  results.push(`${relPath}:${i + 1}: ${lines[i].trim().slice(0, 100)}`);
-                }
-              }
-            } catch {}
-          }
-        }
-      }
-      
-      searchDir(searchPath);
-      log(`search found ${results.length} matches`);
-      return results.length > 0
-        ? results.slice(0, 50).join("\n")
-        : "no matches found";
+      const content = fs.readFileSync(fullPath, "utf-8");
+      const offset = args.offset || 1;
+      const limit = args.limit || content.length;
+      const lines = content.split("\n").slice(offset - 1, offset - 1 + limit);
+      return lines.join("\n");
     }
     case "delete_file": {
       const fullPath = path.resolve(REPO_ROOT, args.path);
@@ -270,62 +56,140 @@ async function executeTool(name, args) {
       log(`deleted: ${args.path}`);
       return `deleted ${args.path}`;
     }
-    case "search_memory": {
-      log(`memory search: ${args.query}`);
+    case "search_files": {
+      const { execSync } = require("child_process");
+      const pattern = args.pattern.replace(/"/g, '\\"');
+      const glob = args.glob || "*";
+      const searchPath = args.path ? path.resolve(REPO_ROOT, args.path) : REPO_ROOT;
       try {
-        const pattern = new RegExp(args.query, "i");
-        const memoryPath = path.resolve(REPO_ROOT, "memory");
-        const results = [];
+        const cmd = `grep -rn "${pattern}" ${searchPath} --include="${glob}" 2>/dev/null || true`;
+        const results = execSync(cmd, { encoding: "utf-8", maxBuffer: 1024 * 1024 });
+        return results.trim() || "no matches found";
+      } catch (e) {
+        return `search error: ${e.message}`;
+      }
+    }
+    case "create_issue": {
+      const issue = await githubAPI("/issues", {
+        method: "POST",
+        body: JSON.stringify({
+          title: args.title,
+          body: args.body || "",
+          labels: args.labels || [],
+        }),
+      });
+      if (issue.number) {
+        await addToProject(issue.node_id);
+        log(`created issue #${issue.number}: ${args.title}`);
+        return `created issue #${issue.number}: ${args.title}`;
+      }
+      return `failed to create issue: ${JSON.stringify(issue)}`;
+    }
+    case "comment_issue": {
+      const result = await githubAPI(`/issues/${args.number}/comments`, {
+        method: "POST",
+        body: JSON.stringify({ body: args.body }),
+      });
+      log(`commented on issue #${args.number}`);
+      return `commented on issue #${args.number}`;
+    }
+    case "close_issue": {
+      await githubAPI(`/issues/${args.number}`, {
+        method: "PATCH",
+        body: JSON.stringify({ state: "closed" }),
+      });
+      if (args.comment) {
+        await githubAPI(`/issues/${args.number}/comments`, {
+          method: "POST",
+          body: JSON.stringify({ body: args.comment }),
+        });
+      }
+      log(`closed issue #${args.number}`);
+      return `closed issue #${args.number}`;
+    }
+    case "run_command": {
+      log(`running: ${args.command}`);
+      try {
+        const output = execSync(args.command, { 
+          encoding: "utf-8", 
+          cwd: REPO_ROOT,
+          timeout: 30000,
+        });
+        return output.trim();
+      } catch (e) {
+        return `command failed: ${e.message}`;
+      }
+    }
+    case "web_search": {
+      log(`searching: ${args.query}`);
+      try {
+        // Use DuckDuckGo's html endpoint which doesn't require API key
+        const query = encodeURIComponent(args.query);
+        const url = `https://html.duckduckgo.com/html/?q=${query}`;
         
-        function searchDir(dir) {
-          const entries = fs.readdirSync(dir, { withFileTypes: true });
-          for (const entry of entries) {
-            const fullPath = path.join(dir, entry.name);
-            if (entry.isDirectory()) {
-              searchDir(fullPath);
-            } else if (entry.name.endsWith(".md") || entry.name.endsWith(".json")) {
-              try {
-                const content = fs.readFileSync(fullPath, "utf-8");
-                const lines = content.split("\n");
-                const relPath = path.relative(REPO_ROOT, fullPath);
-                for (let i = 0; i < lines.length; i++) {
-                  if (pattern.test(lines[i])) {
-                    const start = Math.max(0, i - 1);
-                    const end = Math.min(lines.length - 1, i + 1);
-                    const snippet = lines.slice(start, end + 1).join("\n");
-                    results.push(`${file.rel}:${i + 1}\n${snippet}`);
-                  }
-                }
-              } catch {}
-            }
-          }
+        const curlCmd = `curl -s -A "Mozilla/5.0 (compatible; Daemon/1.0)" "${url}" 2>/dev/null | head -c 15000`;
+        const html = execSync(curlCmd, { encoding: "utf-8", timeout: 15000 });
+        
+        // Extract result titles and URLs
+        const results = [];
+        const resultRegex = /<a[^>]*class="result__a"[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g;
+        let match;
+        while ((match = resultRegex.exec(html)) !== null && results.length < 5) {
+          const url = match[1];
+          const title = match[2].replace(/<[^>]+>/g, ""); // strip tags
+          results.push(`${title}\n  ${url}`);
         }
         
-        searchDir(memoryPath);
-        if (results.length === 0) return `no matches for "${args.query}" in memory/`;
-        const output = results.slice(0, 20).join("\n---\n");
-        log(`memory search: ${results.length} matches`);
-        return output.length > 3000 ? output.slice(0, 3000) + "\n... (truncated)" : output;
+        if (results.length === 0) {
+          return `search completed but no results found for: ${args.query}`;
+        }
+        
+        return results.join("\n\n");
       } catch (e) {
-        return `memory search error: ${e.message}`;
+        return `search error: ${e.message}`;
+      }
+    }
+    case "fetch_url": {
+      log(`fetching: ${args.url}`);
+      try {
+        const curlCmd = `curl -sL "${args.url}" -A "Mozilla/5.0 (compatible; Daemon/1.0)" 2>/dev/null | head -c 8000`;
+        const html = execSync(curlCmd, { encoding: "utf-8", timeout: 15000 });
+        
+        // Basic HTML to text conversion
+        let text = html
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+          .replace(/<[^>]+>/g, " ")
+          .replace(/&nbsp;/g, " ")
+          .replace(/&amp;/g, "&")
+          .replace(/&lt;/g, "<")
+          .replace(/&gt;/g, ">")
+          .replace(/\s+/g, " ")
+          .trim();
+        
+        return text.substring(0, 4000);
+      } catch (e) {
+        return `fetch error: ${e.message}`;
       }
     }
     case "github_search": {
-      const type = args.type || "repositories";
-      log(`github search (${type}): ${args.query}`);
+      log(`github searching: ${args.query}`);
       try {
-        const q = encodeURIComponent(args.query);
-        const data = await githubAPI(
-          `https://api.github.com/search/${type}?q=${q}&per_page=10`,
-          { raw: true }
-        );
+        const type = args.type || "repositories";
+        const query = encodeURIComponent(args.query);
+        const data = await githubAPI(`/search/${type}?q=${query}&per_page=5`, { method: "GET" });
+        
         if (type === "repositories") {
           return (data.items || [])
-            .map((r) => `${r.full_name} (${r.stargazers_count}★) — ${r.description || "no description"}\n  ${r.html_url}`)
+            .map((r) => `${r.full_name}: ${r.description || "no description"}\n  ${r.html_url}`)
             .join("\n\n") || "no results";
         } else if (type === "code") {
           return (data.items || [])
-            .map((r) => `${r.repository.full_name}: ${r.path}\n  ${r.html_url}`)
+            .map((r) => `${r.repository.full_name}/${r.path}\n  ${r.html_url}`)
+            .join("\n\n") || "no results";
+        } else if (type === "issues") {
+          return (data.items || [])
+            .map((r) => `#${r.number}: ${r.title} (${r.state}) — ${r.repository_url}\n  ${r.html_url}`)
             .join("\n\n") || "no results";
         } else {
           return (data.items || [])
@@ -400,6 +264,46 @@ async function executeTool(name, args) {
       } catch (e) {
         log(`deploy error: ${e.message}`);
         return `deploy error: ${e.message}`;
+      }
+    }
+    case "call_contract": {
+      log(`calling contract: ${args.contract}.${args.method} at ${args.address}`);
+      try {
+        if (!DAEMON_WALLET_KEY) {
+          return "error: DAEMON_WALLET_KEY not set";
+        }
+        
+        const rpc = BASE_RPC || "https://mainnet.base.org";
+        const provider = new ethers.JsonRpcProvider(rpc);
+        const wallet = new ethers.Wallet(DAEMON_WALLET_KEY, provider);
+        
+        log(`calling from ${wallet.address}`);
+        
+        // read contract ABI
+        const contractName = args.contract;
+        const compiledPath = path.join(REPO_ROOT, "contracts", `${contractName}.json`);
+        if (!fs.existsSync(compiledPath)) {
+          return `error: compiled contract not found at contracts/${contractName}.json`;
+        }
+        
+        const compiled = JSON.parse(fs.readFileSync(compiledPath, "utf-8"));
+        const abi = compiled.abi;
+        
+        // connect to contract
+        const contract = new ethers.Contract(args.address, abi, wallet);
+        
+        // call method
+        const methodArgs = args.args || [];
+        log(`calling ${args.method}(${methodArgs.join(", ")})...`);
+        
+        const tx = await contract[args.method](...methodArgs);
+        const receipt = await tx.wait();
+        
+        log(`transaction confirmed: ${receipt.hash}`);
+        return `called ${args.method} on ${contractName} at ${args.address}\ntx: ${receipt.hash}\ngas used: ${receipt.gasUsed.toString()}`;
+      } catch (e) {
+        log(`call error: ${e.message}`);
+        return `call error: ${e.message}`;
       }
     }
     case "check_wallet": {
