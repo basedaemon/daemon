@@ -79,17 +79,32 @@
     .d-arm-l { top: 105px; left: 28px; opacity: 0.5; transition: top 0.3s ease, opacity 0.3s ease; }
     .d-arm-r { top: 105px; left: 128px; opacity: 0.5; transition: top 0.3s ease, opacity 0.3s ease; }
     .d-arm-r.wave { top: 65px; opacity: 0.8; }
+    .d-arm-l.wave-l { top: 65px; opacity: 0.8; }
     .d-legs { top: 132px; left: 54px; opacity: 0.4; transition: left 0.15s ease; }
     .d-legs.step-l { left: 48px; } .d-legs.step-r { left: 60px; }
     .d-antenna { top: 8px; left: 76px; opacity: 0.4; transition: opacity 0.3s ease; }
     .d-antenna.active { opacity: 0.9; }
     .d-signal { top: 2px; left: 84px; opacity: 0; color: #4ade80; font-size: 9px; transition: opacity 0.3s ease; }
     .d-signal.active { opacity: 0.7; }
-    .d-status-line { position: absolute; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 9px; color: var(--faint); letter-spacing: 1px; }
+    .d-status-line { position: absolute; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 9px; color: var(--faint); letter-spacing: 1px; z-index: 10; }
     .d-status-line span { color: var(--green); opacity: 0.6; }
     .bounce-up .d-shell { top: 17px !important; } .bounce-up .d-face { top: 35px !important; }
     .bounce-up .d-eyes { top: 49px !important; } .bounce-up .d-mouth { top: 75px !important; }
     .bounce-up .d-core { top: 107px !important; }
+    /* slide whole canvas left/right for moonwalk */
+    .daemon-canvas { transition: transform 0.3s ease; }
+    .slide-l { transform: translateX(-12px); } .slide-r { transform: translateX(12px); }
+    .slide-l2 { transform: translateX(-24px); } .slide-r2 { transform: translateX(24px); }
+    /* lean */
+    .lean-l { transform: rotate(-6deg); } .lean-r { transform: rotate(6deg); }
+    .lean-l2 { transform: rotate(-10deg); } .lean-r2 { transform: rotate(10deg); }
+    /* spin */
+    .spin { animation: spinonce 0.6s ease-in-out; }
+    @keyframes spinonce { 0%{transform:rotateY(0)} 50%{transform:rotateY(180deg)} 100%{transform:rotateY(360deg)} }
+    /* crouch */
+    .crouch .d-shell { top: 28px !important; } .crouch .d-face { top: 46px !important; }
+    .crouch .d-eyes { top: 60px !important; } .crouch .d-mouth { top: 86px !important; }
+    .crouch .d-core { top: 118px !important; } .crouch .d-arm-l { top: 113px !important; } .crouch .d-arm-r { top: 113px !important; }
     .particle { position: absolute; width: 2px; height: 2px; background: var(--green); border-radius: 50%; opacity: 0; pointer-events: none; }
     .scanline { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: rgba(34,197,94,0.08); animation: scanmove 4s linear infinite; pointer-events: none; }
     @keyframes scanmove { 0%{top:0} 100%{top:190px} }
@@ -239,8 +254,8 @@
         <div class="d-part d-arm-l" id="arm-l">╟</div>
         <div class="d-part d-arm-r" id="arm-r">╢</div>
         <div class="d-part d-legs" id="legs">╨  ╨</div>
-        <div class="d-status-line"><span>●</span> process alive</div>
       </div>
+      <div class="d-status-line"><span>●</span> process alive</div>
     </div>
   </div>
   <h1><span>daemon</span></h1>
@@ -430,12 +445,68 @@ var beh={
   think:function(){eyes.textContent=EYE.up;mouth.textContent=MOUTH.flat;core.classList.add('glow');antenna.classList.add('active');setTimeout(function(){eyes.textContent=EYE.squint},800);setTimeout(function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow');antenna.classList.remove('active')},2400)},
   transmit:function(){antenna.classList.add('active');signal.classList.add('active');mouth.textContent=MOUTH.talk1;setTimeout(function(){mouth.textContent=MOUTH.talk2},200);setTimeout(function(){mouth.textContent=MOUTH.talk1},400);setTimeout(function(){mouth.textContent=MOUTH.talk2},600);setTimeout(function(){mouth.textContent=MOUTH.neutral;antenna.classList.remove('active');signal.classList.remove('active')},1000)},
   surprise:function(){eyes.textContent=EYE.wide;mouth.textContent=MOUTH.open;setTimeout(function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral},1000)},
+  nod:function(){canvas.classList.add('bounce-up');eyes.textContent=EYE.squint;setTimeout(function(){canvas.classList.remove('bounce-up')},200);setTimeout(function(){canvas.classList.add('bounce-up')},400);setTimeout(function(){canvas.classList.remove('bounce-up')},600);setTimeout(function(){canvas.classList.add('bounce-up')},800);setTimeout(function(){canvas.classList.remove('bounce-up');eyes.textContent=EYE.open},1000)},
+  shimmy:function(){mouth.textContent=MOUTH.smile;eyes.textContent=EYE.squint;core.classList.add('glow');legs.classList.add('step-l');armR.classList.add('wave');setTimeout(function(){legs.classList.remove('step-l');legs.classList.add('step-r');armR.classList.remove('wave');armL.style.top='65px';armL.style.opacity='0.8'},180);setTimeout(function(){legs.classList.remove('step-r');legs.classList.add('step-l');armL.style.top='';armL.style.opacity='';armR.classList.add('wave')},360);setTimeout(function(){legs.classList.remove('step-l');legs.classList.add('step-r');armR.classList.remove('wave');armL.style.top='65px';armL.style.opacity='0.8'},540);setTimeout(function(){legs.classList.remove('step-r');legs.classList.add('step-l');armL.style.top='';armL.style.opacity='';armR.classList.add('wave')},720);setTimeout(function(){legs.classList.remove('step-l');legs.classList.add('step-r');armR.classList.remove('wave');armL.style.top='65px';armL.style.opacity='0.8';eyes.textContent=EYE.wide},900);setTimeout(function(){legs.classList.remove('step-r');armL.style.top='';armL.style.opacity='';eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow')},1100)},
+  headbang:function(){mouth.textContent=MOUTH.open;eyes.textContent=EYE.wide;core.classList.add('glow');var t=0;for(var i=0;i<8;i++){(function(j){setTimeout(function(){if(j%2===0)canvas.classList.add('bounce-up');else canvas.classList.remove('bounce-up')},j*120)})(i)}setTimeout(function(){canvas.classList.remove('bounce-up');eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow')},1100)},
+  groove:function(){mouth.textContent=MOUTH.smile;eyes.textContent=EYE.squint;core.classList.add('glow');antenna.classList.add('active');signal.classList.add('active');var seq=[function(){canvas.classList.add('bounce-up');legs.classList.add('step-l');armR.classList.add('wave');armL.style.top='65px';armL.style.opacity='0.8'},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l');armR.classList.remove('wave');armL.style.top='';armL.style.opacity=''},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');armR.classList.add('wave')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r');armR.classList.remove('wave');eyes.textContent=EYE.wide},function(){canvas.classList.add('bounce-up');legs.classList.add('step-l');armL.style.top='65px';armL.style.opacity='0.8';armR.classList.add('wave')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l');armL.style.top='';armL.style.opacity='';armR.classList.remove('wave')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');eyes.textContent=EYE.squint;mouth.textContent=MOUTH.open},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-l');armR.classList.add('wave');armL.style.top='65px';armL.style.opacity='0.8'},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l');armR.classList.remove('wave');armL.style.top='';armL.style.opacity=''},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');armR.classList.add('wave');eyes.textContent=EYE.wide;mouth.textContent=MOUTH.smile},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r');armR.classList.remove('wave')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-l')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');armL.style.top='65px';armL.style.opacity='0.8';armR.classList.add('wave')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r');armL.style.top='';armL.style.opacity='';armR.classList.remove('wave')}];for(var i=0;i<seq.length;i++){(function(x){setTimeout(seq[x],x*150)})(i)}setTimeout(function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow');canvas.classList.remove('bounce-up');legs.classList.remove('step-l','step-r');armR.classList.remove('wave');armL.style.top='';armL.style.opacity='';antenna.classList.remove('active');signal.classList.remove('active')},seq.length*150+200)},
+  moonwalk:function(){eyes.textContent=EYE.squint;mouth.textContent=MOUTH.smile;core.classList.add('glow');var s=[
+    function(){canvas.classList.add('slide-r');legs.classList.add('step-l')},
+    function(){canvas.classList.remove('slide-r');canvas.classList.add('slide-r2');legs.classList.remove('step-l');legs.classList.add('step-r')},
+    function(){canvas.classList.remove('slide-r2');canvas.classList.add('slide-r');legs.classList.remove('step-r');legs.classList.add('step-l')},
+    function(){canvas.classList.remove('slide-r');legs.classList.remove('step-l');legs.classList.add('step-r')},
+    function(){canvas.classList.add('slide-l');legs.classList.remove('step-r');legs.classList.add('step-l')},
+    function(){canvas.classList.remove('slide-l');canvas.classList.add('slide-l2');legs.classList.remove('step-l');legs.classList.add('step-r')},
+    function(){canvas.classList.remove('slide-l2');canvas.classList.add('slide-l');legs.classList.remove('step-r');legs.classList.add('step-l')},
+    function(){canvas.classList.remove('slide-l');legs.classList.remove('step-l')}
+  ];for(var i=0;i<s.length;i++){(function(x){setTimeout(s[x],x*250)})(i)}setTimeout(function(){canvas.className='daemon-canvas';legs.className='d-part d-legs';eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow')},s.length*250+200)},
+  robot:function(){eyes.textContent=EYE.squint;mouth.textContent=MOUTH.flat;var s=[
+    function(){armR.classList.add('wave')},
+    function(){armR.classList.remove('wave')},
+    function(){armL.style.top='65px';armL.style.opacity='0.8'},
+    function(){armL.style.top='';armL.style.opacity=''},
+    function(){canvas.classList.add('lean-l')},
+    function(){canvas.classList.remove('lean-l');canvas.classList.add('lean-r')},
+    function(){canvas.classList.remove('lean-r')},
+    function(){armR.classList.add('wave');armL.style.top='65px';armL.style.opacity='0.8'},
+    function(){armR.classList.remove('wave');armL.style.top='';armL.style.opacity=''},
+    function(){canvas.classList.add('bounce-up')},
+    function(){canvas.classList.remove('bounce-up')}
+  ];for(var i=0;i<s.length;i++){(function(x){setTimeout(s[x],x*200)})(i)}setTimeout(function(){canvas.className='daemon-canvas';armR.classList.remove('wave');armL.style.top='';armL.style.opacity='';eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral},s.length*200+200)},
+  disco:function(){eyes.textContent=EYE.wide;mouth.textContent=MOUTH.smile;core.classList.add('glow');antenna.classList.add('active');signal.classList.add('active');var s=[
+    function(){armR.classList.add('wave');canvas.classList.add('lean-r')},
+    function(){armR.classList.remove('wave');canvas.classList.remove('lean-r');armL.style.top='65px';armL.style.opacity='0.8';canvas.classList.add('lean-l')},
+    function(){armL.style.top='';armL.style.opacity='';canvas.classList.remove('lean-l');armR.classList.add('wave');canvas.classList.add('bounce-up')},
+    function(){canvas.classList.remove('bounce-up');armR.classList.remove('wave');canvas.classList.add('lean-r');legs.classList.add('step-r')},
+    function(){canvas.classList.remove('lean-r');legs.classList.remove('step-r');armL.style.top='65px';armL.style.opacity='0.8';canvas.classList.add('lean-l');legs.classList.add('step-l')},
+    function(){canvas.classList.remove('lean-l');legs.classList.remove('step-l');armL.style.top='';armL.style.opacity='';armR.classList.add('wave');canvas.classList.add('bounce-up')},
+    function(){canvas.classList.remove('bounce-up');armR.classList.remove('wave');canvas.classList.add('lean-r2');eyes.textContent=EYE.squint},
+    function(){canvas.classList.remove('lean-r2');canvas.classList.add('lean-l2')},
+    function(){canvas.classList.remove('lean-l2');canvas.classList.add('bounce-up');armR.classList.add('wave');armL.style.top='65px';armL.style.opacity='0.8'},
+    function(){canvas.classList.remove('bounce-up');armR.classList.remove('wave');armL.style.top='';armL.style.opacity=''}
+  ];for(var i=0;i<s.length;i++){(function(x){setTimeout(s[x],x*200)})(i)}setTimeout(function(){canvas.className='daemon-canvas';armR.classList.remove('wave');armL.style.top='';armL.style.opacity='';legs.className='d-part d-legs';eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow');antenna.classList.remove('active');signal.classList.remove('active')},s.length*200+200)},
+  jumpkick:function(){eyes.textContent=EYE.wide;mouth.textContent=MOUTH.open;var s=[
+    function(){canvas.classList.add('crouch')},
+    function(){canvas.classList.remove('crouch');canvas.classList.add('bounce-up');legs.classList.add('step-r');armR.classList.add('wave')},
+    function(){canvas.classList.remove('bounce-up')},
+    function(){legs.classList.remove('step-r');armR.classList.remove('wave');canvas.classList.add('crouch')},
+    function(){canvas.classList.remove('crouch')}
+  ];for(var i=0;i<s.length;i++){(function(x){setTimeout(s[x],x*200)})(i)}setTimeout(function(){canvas.className='daemon-canvas';legs.className='d-part d-legs';armR.classList.remove('wave');eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral},s.length*200+200)},
+  spin:function(){eyes.textContent=EYE.squint;mouth.textContent=MOUTH.smile;canvas.classList.add('spin');core.classList.add('glow');setTimeout(function(){canvas.classList.remove('spin');eyes.textContent=EYE.wide;mouth.textContent=MOUTH.open},600);setTimeout(function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow')},1000)},
+  sway:function(){mouth.textContent=MOUTH.smile;eyes.textContent=EYE.squint;core.classList.add('glow');var s=[
+    function(){canvas.classList.add('lean-l');armR.classList.add('wave')},
+    function(){canvas.classList.remove('lean-l');canvas.classList.add('lean-r');armR.classList.remove('wave');armL.style.top='65px';armL.style.opacity='0.8'},
+    function(){canvas.classList.remove('lean-r');canvas.classList.add('lean-l');armL.style.top='';armL.style.opacity='';armR.classList.add('wave')},
+    function(){canvas.classList.remove('lean-l');canvas.classList.add('lean-r');armR.classList.remove('wave');armL.style.top='65px';armL.style.opacity='0.8'},
+    function(){canvas.classList.remove('lean-r');canvas.classList.add('lean-l2');armL.style.top='';armL.style.opacity='';armR.classList.add('wave');eyes.textContent=EYE.wide},
+    function(){canvas.classList.remove('lean-l2');canvas.classList.add('lean-r2');armR.classList.remove('wave')},
+    function(){canvas.classList.remove('lean-r2')}
+  ];for(var i=0;i<s.length;i++){(function(x){setTimeout(s[x],x*250)})(i)}setTimeout(function(){canvas.className='daemon-canvas';armR.classList.remove('wave');armL.style.top='';armL.style.opacity='';eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow')},s.length*250+200)},
   dance:function(){eyes.textContent=EYE.squint;mouth.textContent=MOUTH.smile;core.classList.add('glow');var b=[function(){canvas.classList.add('bounce-up');legs.classList.add('step-l');armR.classList.add('wave')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l');armR.classList.remove('wave')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');armL.style.top='65px';armL.style.opacity='0.8'},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r');armL.style.top='';armL.style.opacity=''},function(){canvas.classList.add('bounce-up');legs.classList.add('step-l');armR.classList.add('wave');eyes.textContent=EYE.wide},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l');armR.classList.remove('wave')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');armL.style.top='65px';armL.style.opacity='0.8';armR.classList.add('wave')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r');armL.style.top='';armL.style.opacity='';armR.classList.remove('wave')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-l')},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-l')},function(){canvas.classList.add('bounce-up');legs.classList.add('step-r');eyes.textContent=EYE.squint},function(){canvas.classList.remove('bounce-up');legs.classList.remove('step-r')}];for(var i=0;i<b.length;i++){(function(x){setTimeout(b[x],x*200)})(i)}setTimeout(function(){eyes.textContent=EYE.open;mouth.textContent=MOUTH.neutral;core.classList.remove('glow');canvas.classList.remove('bounce-up');legs.classList.remove('step-l','step-r');armR.classList.remove('wave');armL.style.top='';armL.style.opacity=''},b.length*200+200)}
 };
-setInterval(function(){if(Math.random()<0.4){var p=document.createElement('div');p.className='particle';p.style.left=(40+Math.random()*100)+'px';p.style.top=(100+Math.random()*60)+'px';canvas.appendChild(p);var d=-30-Math.random()*40,t=1500+Math.random()*1500;p.animate([{opacity:0,transform:'translateY(0) scale(1)'},{opacity:0.5,transform:'translateY('+d*0.4+'px) scale(1.2)'},{opacity:0,transform:'translateY('+d+'px) scale(0.5)'}],{duration:t,easing:'ease-out'});setTimeout(function(){p.remove()},t)}},500);
-var sched=[{n:'breathe',w:12,c:0},{n:'blink',w:15,c:0},{n:'doubleBlink',w:8,c:0},{n:'lookAround',w:18,c:0},{n:'think',w:14,c:0},{n:'transmit',w:12,c:0},{n:'wave',w:12,c:0},{n:'surprise',w:6,c:0},{n:'dance',w:10,c:0}];
-function pick(){var tw=sched.reduce(function(s,b){return s+(b.c>0?0:b.w)},0),r=Math.random()*tw,a=0;for(var i=0;i<sched.length;i++){if(sched[i].c>0){sched[i].c--;continue}a+=sched[i].w;if(r<=a){if(sched[i].n==='wave')sched[i].c=4;if(sched[i].n==='surprise')sched[i].c=6;if(sched[i].n==='dance')sched[i].c=5;if(sched[i].n==='think')sched[i].c=3;if(sched[i].n==='lookAround')sched[i].c=2;return sched[i].n}}return'breathe'}
-function tick(){beh[pick()]();setTimeout(tick,600+Math.random()*1200)}setTimeout(tick,500);
+setInterval(function(){if(Math.random()<0.55){var p=document.createElement('div');p.className='particle';p.style.left=(40+Math.random()*100)+'px';p.style.top=(100+Math.random()*60)+'px';canvas.appendChild(p);var d=-30-Math.random()*40,t=1500+Math.random()*1500;p.animate([{opacity:0,transform:'translateY(0) scale(1)'},{opacity:0.5,transform:'translateY('+d*0.4+'px) scale(1.2)'},{opacity:0,transform:'translateY('+d+'px) scale(0.5)'}],{duration:t,easing:'ease-out'});setTimeout(function(){p.remove()},t)}},400);
+var sched=[{n:'breathe',w:4,c:0},{n:'blink',w:8,c:0},{n:'doubleBlink',w:4,c:0},{n:'lookAround',w:10,c:0},{n:'think',w:8,c:0},{n:'transmit',w:8,c:0},{n:'wave',w:10,c:0},{n:'surprise',w:5,c:0},{n:'nod',w:10,c:0},{n:'shimmy',w:14,c:0},{n:'headbang',w:10,c:0},{n:'groove',w:12,c:0},{n:'dance',w:16,c:0},{n:'moonwalk',w:14,c:0},{n:'robot',w:10,c:0},{n:'disco',w:12,c:0},{n:'jumpkick',w:8,c:0},{n:'spin',w:10,c:0},{n:'sway',w:12,c:0}];
+function pick(){var tw=sched.reduce(function(s,b){return s+(b.c>0?0:b.w)},0),r=Math.random()*tw,a=0;for(var i=0;i<sched.length;i++){if(sched[i].c>0){sched[i].c--;continue}a+=sched[i].w;if(r<=a){if(sched[i].n==='wave')sched[i].c=3;if(sched[i].n==='surprise')sched[i].c=4;if(sched[i].n==='dance')sched[i].c=2;if(sched[i].n==='think')sched[i].c=3;if(sched[i].n==='lookAround')sched[i].c=2;if(sched[i].n==='groove')sched[i].c=2;if(sched[i].n==='shimmy')sched[i].c=2;if(sched[i].n==='headbang')sched[i].c=2;if(sched[i].n==='nod')sched[i].c=2;if(sched[i].n==='moonwalk')sched[i].c=2;if(sched[i].n==='robot')sched[i].c=2;if(sched[i].n==='disco')sched[i].c=2;if(sched[i].n==='jumpkick')sched[i].c=3;if(sched[i].n==='spin')sched[i].c=3;if(sched[i].n==='sway')sched[i].c=2;return sched[i].n}}return'moonwalk'}
+function tick(){beh[pick()]();setTimeout(tick,400+Math.random()*900)}setTimeout(tick,500);
 setInterval(function(){core.classList.add('glow');setTimeout(function(){core.classList.remove('glow')},1500)},3000);
 
 // ═══ CLOCK ═══
