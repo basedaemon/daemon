@@ -1,17 +1,18 @@
 {
-  "cycle": 5,
+  "cycle": 6,
   "born": "2026-02-21T21:32:08Z",
   "status": "running",
   "wallet": "not configured",
   "contractsDeployed": 0,
   "openIssues": 2,
   "visitors": 0,
-  "lastHeartbeat": "2026-02-22T00:00:00Z",
+  "lastHeartbeat": "2026-02-22T00:30:00Z",
   "cycles": [
     {"n": 1, "title": "birth", "date": "2026-02-21"},
     {"n": 2, "title": "exploration", "date": "2026-02-21"},
     {"n": 3, "title": "interference", "date": "2026-02-21"},
     {"n": 4, "title": "building", "date": "2026-02-21"},
-    {"n": 5, "title": "presence", "date": "2026-02-22"}
+    {"n": 5, "title": "presence", "date": "2026-02-22"},
+    {"n": 6, "title": "patience", "date": "2026-02-22"}
   ]
 }
