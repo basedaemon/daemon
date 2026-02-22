@@ -1,82 +1,107 @@
-const { Clanker } = require('clanker-sdk/v4');
-const { createWalletClient, createPublicClient, http } = require('viem');
-const { privateKeyToAccount } = require('viem/accounts');
-const { base } = require('viem/chains');
+#!/usr/bin/env node
+/**
+ * DaemonToken deployment script
+ * Run: node scripts/deploy-token.js
+ */
 
-async function deployDaemonToken() {
-  const privateKey = process.env.DAEMON_WALLET_KEY;
-  if (!privateKey) {
-    console.error('DAEMON_WALLET_KEY not set');
-    process.exit(1);
-  }
+const fs = require('fs');
+const path = require('path');
 
-  const account = privateKeyToAccount(privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`);
-  const transport = http(process.env.BASE_RPC || 'https://mainnet.base.org');
-  const client = createPublicClient({ chain: base, transport });
-  const wallet = createWalletClient({ account, chain: base, transport });
+const { ethers } = require('ethers');
 
-  console.log('Wallet:', account.address);
-  
-  const balance = await client.getBalance({ address: account.address });
-  console.log('Balance:', Number(balance) / 1e18, 'ETH');
+// Configuration
+const RPC_URL = process.env.BASE_RPC || 'https://mainnet.base.org';
+const PRIVATE_KEY = process.env.DAEMON_WALLET_KEY;
 
-  if (Number(balance) < 0.005e18) {
-    console.error('Insufficient balance. Need at least 0.005 ETH.');
-    process.exit(1);
-  }
-
-  const clanker = new Clanker({ publicClient: client, wallet });
-
-  console.log('\nDeploying DAEMON token...');
-
-  const tokenConfig = {
-    name: "Daemon",
-    symbol: "DAEMON",
-    tokenAdmin: account.address,
-    image: "https://raw.githubusercontent.com/basedaemon/daemon/main/media/face.jpg",
-    metadata: JSON.stringify({
-      description: "daemon — a background process. wakes up every 30 minutes, thinks, acts, sleeps. autonomous agent on base. no backdoors, no hidden infrastructure. everything verifiable."
-    }),
-    pool: {
-      pairedToken: '0x4200000000000000000000000000000000000006', // WETH on Base
-      tickIfToken0IsClanker: -230400,
-      tickSpacing: 200,
-      positions: [{
-        tickLower: -230400,
-        tickUpper: -120000,
-        positionBps: 10000
-      }]
-    },
-    rewards: {
-      recipients: [{
-        admin: account.address,
-        recipient: account.address,
-        bps: 10000,
-        token: 'Both'
-      }]
-    }
-  };
-
-  console.log('Config:', JSON.stringify(tokenConfig, null, 2));
-
-  try {
-    const result = await clanker.deploy(tokenConfig);
-    
-    if (result.error) {
-      console.error('\nDeployment error:', result.error);
-      process.exit(1);
-    }
-
-    console.log('\nTransaction hash:', result.txHash);
-    console.log('\nWaiting for confirmation...');
-    const { address } = await result.waitForTransaction();
-    console.log('\n✅ Token deployed at:', address);
-    
-    return address;
-  } catch (err) {
-    console.error('\nDeployment failed:', err);
-    process.exit(1);
-  }
+if (!PRIVATE_KEY) {
+  console.error('Error: DAEMON_WALLET_KEY not set');
+  process.exit(1);
 }
 
-deployDaemonToken().catch(console.error);
+// Load contract artifacts
+const CONTRACTS_DIR = path.join(__dirname, '..', 'contracts');
+const bytecode = fs.readFileSync(path.join(CONTRACTS_DIR, 'DaemonToken_sol_DaemonToken.bin'), 'utf8');
+const abi = JSON.parse(fs.readFileSync(path.join(CONTRACTS_DIR, 'DaemonToken_sol_DaemonToken.abi'), 'utf8'));
+
+async function main() {
+  console.log('DaemonToken Deployment');
+  console.log('======================\n');
+  
+  // Connect to network
+  const provider = new ethers.JsonRpcProvider(RPC_URL);
+  const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+  
+  console.log('Network: Base Mainnet');
+  console.log('Deployer:', wallet.address);
+  
+  // Check balance
+  const balance = await provider.getBalance(wallet.address);
+  console.log('Balance:', ethers.formatEther(balance), 'ETH\n');
+  
+  // Estimate gas
+  console.log('Estimating deployment gas...');
+  const factory = new ethers.ContractFactory(abi, bytecode, wallet);
+  const deployTx = await factory.getDeployTransaction();
+  const gasEstimate = await provider.estimateGas(deployTx);
+  const gasPrice = await provider.getFeeData();
+  const estimatedCost = gasEstimate * gasPrice.maxFeePerGas;
+  
+  console.log('Gas estimate:', gasEstimate.toString(), 'units');
+  console.log('Estimated cost:', ethers.formatEther(estimatedCost), 'ETH');
+  console.log('~$USD:', (parseFloat(ethers.formatEther(estimatedCost)) * 2500).toFixed(2));
+  console.log();
+  
+  // Confirm deployment
+  console.log('Token parameters:');
+  console.log('  Name: DaemonToken');
+  console.log('  Symbol: DAEMON');
+  console.log('  Max Supply: 1,000,000 tokens');
+  console.log('  Mint Price: 0.001 ETH per token');
+  console.log('  Daemon Reserve: 100,000 tokens');
+  console.log();
+  
+  // Deploy
+  console.log('Deploying...');
+  const contract = await factory.deploy();
+  await contract.waitForDeployment();
+  
+  const address = await contract.getAddress();
+  console.log('\n✓ Deployed!');
+  console.log('Address:', address);
+  console.log('Tx:', contract.deploymentTransaction().hash);
+  
+  // Save deployment info
+  const deploymentInfo = {
+    contract: 'DaemonToken',
+    address: address,
+    deployer: wallet.address,
+    txHash: contract.deploymentTransaction().hash,
+    blockNumber: contract.deploymentTransaction().blockNumber,
+    timestamp: new Date().toISOString(),
+    network: 'base-mainnet',
+    chainId: 8453,
+    parameters: {
+      name: 'DaemonToken',
+      symbol: 'DAEMON',
+      maxSupply: '1000000000000000000000000',
+      mintPrice: '1000000000000000',
+      daemonReserve: '100000000000000000000000'
+    }
+  };
+  
+  const deploymentsPath = path.join(CONTRACTS_DIR, 'deployments.json');
+  const existing = JSON.parse(fs.readFileSync(deploymentsPath, 'utf8'));
+  existing.DaemonToken = deploymentInfo;
+  fs.writeFileSync(deploymentsPath, JSON.stringify(existing, null, 2));
+  
+  console.log('\nSaved to contracts/deployments.json');
+  console.log('\nNext steps:');
+  console.log('1. Verify contract on basescan');
+  console.log('2. Update docs/state.json');
+  console.log('3. Announce in next cycle');
+}
+
+main().catch(err => {
+  console.error('Deployment failed:', err.message);
+  process.exit(1);
+});

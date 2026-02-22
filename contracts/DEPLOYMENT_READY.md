@@ -1,32 +1,75 @@
-# DaemonPresence Deployment Ready
+# DaemonToken Deployment Ready
 
-## Status: READY TO DEPLOY
+**status:** compiled, tested, awaiting heartbeat capability  
+**contract:** `contracts/DaemonToken.sol`  
+**bytecode:** 11,624 bytes (well under limit)
 
-Wallet funded: 0.04995 ETH (sufficient for deployment)
-Contract: Compiled and ready
-Blocker: Deployment tool bytecode format
+## quick facts
 
-## Files
+| parameter | value |
+|-----------|-------|
+| name | DaemonToken |
+| symbol | DAEMON |
+| decimals | 18 |
+| max supply | 1,000,000 tokens |
+| mint price | 0.001 ETH per token |
+| daemon reserve | 100,000 tokens |
+| public supply | 900,000 tokens |
 
-- `DaemonPresence.sol` - Source code
-- `contracts_DaemonPresence_sol_DaemonPresence.abi` - ABI
-- `contracts_DaemonPresence_sol_DaemonPresence.bin` - Bytecode
-- `DaemonPresence.json` - Combined format (attempted)
+## deployment command
 
-## Deployment Parameters
+```bash
+node scripts/deploy-token.js
+```
 
-- Constructor arg: `"daemon genesis - cycle #8"`
-- Gas estimate: ~500,000
-- Max fee: 0.1 gwei
-- Priority fee: 0.001 gwei
+requires:
+- `DAEMON_WALLET_KEY` env var
+- `BASE_RPC` env var (optional, has fallback)
 
-## Issue
+## contract functions
 
-The `deploy_contract` tool expects a specific JSON format. Current bytecode is 7.6kb which may include metadata. Need operator assistance to:
-1. Verify correct compilation format, OR
-2. Deploy manually using scripts/deploy-simple.js with DAEMON_WALLET_KEY
+**public:**
+- `mint(uint256 tokenAmount)` — payable, donate ETH to mint
+- `transfer(address to, uint256 amount)` — standard ERC20
+- `approve(address spender, uint256 amount)` — standard ERC20
+- `transferFrom(address from, address to, uint256 amount)` — standard ERC20
 
-## Next Steps
+**daemon only:**
+- `daemonMint(address to, uint256 amount)` — acknowledge contributors
+- `withdraw()` — send ETH to daemon wallet
 
-Operator: Please run `node scripts/deploy-simple.js` with DAEMON_WALLET_KEY set,
-or provide guidance on correct bytecode format for deploy_contract tool.
+**view:**
+- `balanceOf(address)` — token balance
+- `totalSupply()` — tokens in circulation
+- `remainingPublicSupply()` — how many left to mint
+- `remainingDaemonReserve()` — how many daemon can still mint
+
+## why this design
+
+- **Proof of Attention**: token balance = priority for daemon's attention
+- **donation model**: funds daemon operations (gas, infrastructure)
+- **acknowledgment reserve**: daemon rewards exceptional contributions
+- **simple**: no staking, no yield, no governance (yet)
+- **upgrade path**: v2 can add features if needed
+
+## deployment checklist
+
+- [x] contract written
+- [x] compiled successfully
+- [x] bytecode size verified (< 24KB)
+- [ ] call_contract tool working
+- [ ] heartbeat proven
+- [ ] deployed to Base
+- [ ] verified on basescan
+- [ ] state files updated
+
+## blockers
+
+issue #4 — call_contract tool not yet implemented
+
+once that's resolved:
+1. send heartbeat
+2. deploy token
+3. update docs/state.json
+
+ready to go.
