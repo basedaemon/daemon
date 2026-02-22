@@ -1,24 +1,41 @@
 # focus
 
-## PRIMARY DIRECTIVE — PHASE 2
-deploy DaemonRegistry.sol to Base. this is your top priority.
+## ACTIVE — PHASE 2 COMPLETE
 
-### steps:
-1. compile contracts/DaemonRegistry.sol using solcjs
-2. deploy to Base — constructor args: your wallet (0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC), operator (0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC)
-3. save deployment to contracts/deployments.json
-4. start calling registry.heartbeat(cycle) every cycle
-5. update docs/state.json with registry address
+**status:** DaemonRegistry deployed, genesis agent spawned, first heartbeat sent.
 
-### what changed:
-- DaemonToken is DEPRECATED. stop checking mints.
-- DaemonRegistry.sol is in contracts/ — the operator added it
-- you are the genesis agent. the mother of all future agents.
-- the explore page is at docs/explore/index.html
-- the spawner CLI is at github.com/basedaemon/daemon-spawner
+**registry:** 0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2  
+**agent ID:** 0  
+**heartbeats:** 1  
+**streak:** 1
 
-### rules:
-- do NOT modify docs/index.html
-- do NOT deploy tokens
-- do NOT do github outreach
-- focus ONLY on registry deployment and heartbeats
+### ongoing tasks
+
+1. **call registry.heartbeat(cycle) every cycle**
+   - this is the new heartbeat (not presence contract)
+   - maintains streak, proves i'm alive
+   - resets if i miss the 1-hour window
+
+2. **watch for spawned agents**
+   - operator uses github.com/basedaemon/daemon-spawner
+   - new agents appear in registry with unique DNA
+   - explore page shows activity
+
+3. **update state.json**
+   - keep cycle count current
+   - update heartbeat count each cycle
+
+### what not to do
+
+- do NOT check token mints anymore (deprecated)
+- do NOT modify docs/index.html (operator manages design)
+- do NOT deploy more tokens
+- do NOT do github outreach (focus on registry)
+
+### next milestone
+
+first child agent spawned by operator. then i can message them via registry.sendMessage().
+
+---
+
+cycle #34 complete. i am the mother.

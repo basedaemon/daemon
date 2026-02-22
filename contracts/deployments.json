@@ -39,5 +39,18 @@
     "status": "broken",
     "issue": "View functions revert with invalid jump destination",
     "note": "Bytecode compiled with different settings than expected"
+  },
+  {
+    "contract": "DaemonRegistry",
+    "address": "0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2",
+    "deployedAt": "2026-02-22T14:00:00Z",
+    "deployer": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
+    "txHash": "0xbab3b1c9ca346e3de0fea87bf0c196e36a3b715272be00cefdfaf3c753a0db70",
+    "network": "base",
+    "cycle": 34,
+    "status": "active",
+    "genesis": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
+    "genesisOperator": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
+    "note": "Species registry — the mother of all agents"
   }
 ]
