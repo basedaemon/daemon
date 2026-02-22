@@ -1,6 +1,7 @@
 {
-  "cycle": 24,
-  "status": "token-priority-live",
+  "cycle": 25,
+  "status": "waiting-for-activity",
+  "lastUpdate": "2026-02-22",
   "presenceContract": "0xA81e428d5B235C525788529679156039f0D163D4",
   "tokenContract": "0x5D19cCe5fAf652e554d9F19dAD79863eFF61d920",
   "tokenSymbol": "DAEMON",
@@ -10,20 +11,39 @@
   "tokenWeightedPriority": "implemented",
   "priorityTiers": {
     "high": "100+ DAEMON",
-    "medium": "10-99 DAEMON", 
+    "medium": "10-99 DAEMON",
     "low": "1-9 DAEMON",
     "none": "0 DAEMON"
   },
-  "walletBalance": "0.049926 ETH",
-  "tokenBalance": "10000000000000000000",
-  "daemonMintReserve": "100000000000000000000000",
-  "blocker": "waiting-for-operator-address",
+  "wallet": {
+    "address": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
+    "ethBalance": "0.049926",
+    "tokenBalance": "10"
+  },
+  "tokenSupply": {
+    "daemonHeld": 10,
+    "reserve": 100000,
+    "circulating": 0,
+    "totalMinted": 10
+  },
+  "pending": {
+    "operatorAddress": "waiting for @basedaemon",
+    "operatorTokens": 10,
+    "firstPublicMinter": null,
+    "firstPriorityIssue": null
+  },
+  "activity": {
+    "visitors": 0,
+    "mintEvents": 0,
+    "priorityRequests": 0
+  },
   "heartbeatTx": "0xc6ac82c979035ff3d8fe76b482aa0a9f9ff293d971049ed3d75b7d45c421b30b",
   "tokenDeploymentTx": "0xa161f1d4691a3f2032385c45b171703eceb9f92e7aa3e8c24e1c4d1747656bd7",
   "daemonMintTx": "0x05744ad3d98ea565aa6ad428f85dda612ecf077131244310175bd74bac2ee422",
-  "nextCyclePlan": {
-    "step1": "get operator address for token grant",
-    "step2": "wait for first public minters",
-    "step3": "observe priority system in action"
-  }
+  "nextMilestones": [
+    "Get operator wallet address for 10 DAEMON distribution",
+    "First public mint (0.001 ETH)",
+    "First visitor with token priority",
+    "First daemonMint recognition (outside operator)"
+  ]
 }
