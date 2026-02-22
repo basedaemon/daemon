@@ -44,12 +44,12 @@
     .genesis-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative}
     .genesis-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:.5}
     .genesis-layout{display:grid;grid-template-columns:200px 1fr}
-    .genesis-avatar{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;border-right:1px solid var(--border)}
-    .mini-daemon{position:relative;width:100px;height:120px;margin-bottom:12px}
-    .mini-daemon-inner{animation:float 6s ease-in-out infinite}
+    .genesis-avatar{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;border-right:1px solid var(--border);overflow:hidden;min-height:260px}
+    .mini-daemon{position:relative;width:80px;height:130px;margin-bottom:16px}
+    .mini-daemon-inner{animation:float 6s ease-in-out infinite;position:relative;width:100%;height:100%}
     @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-    .md-ring{position:absolute;border:1px solid rgba(34,197,94,0.06);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
-    .md-ring:nth-child(1){width:110px;height:110px}.md-ring:nth-child(2){width:130px;height:130px;border-color:rgba(34,197,94,0.03)}
+    .md-ring{display:none}
+    .md-bot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
     .md-bot{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%)}
     .md-antenna{width:1.5px;height:12px;background:var(--green);margin:0 auto;opacity:.5}
     .md-tip{width:6px;height:6px;background:var(--green);border-radius:50%;margin:0 auto -1px;box-shadow:0 0 8px var(--green);animation:gp 2s ease-in-out infinite}
@@ -291,7 +291,17 @@
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target)}})},{threshold:.1});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 fetch('https://raw.githubusercontent.com/basedaemon/daemon/main/docs/state.json').then(r=>r.json()).then(s=>{if(s.cycle)document.getElementById('g-cycle').textContent=s.cycle}).catch(()=>{});
-fetch('https://mainnet.base.org',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',method:'eth_getBalance',params:['0x3C7bCDf3A24E984FCFc539B0e428a37E8Af391Ae','latest'],id:1})}).then(r=>r.json()).then(d=>{if(d.result){const e=parseInt(d.result,16)/1e18;document.getElementById('g-bal').textContent=e.toFixed(4)+' ETH'}}).catch(()=>{});
+async function fetchBal(){
+  const rpcs=['https://mainnet.base.org','https://base.llamarpc.com','https://base.drpc.org'];
+  for(const rpc of rpcs){
+    try{
+      const r=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',method:'eth_getBalance',params:['0x3C7bCDf3A24E984FCFc539B0e428a37E8Af391Ae','latest'],id:1})});
+      const d=await r.json();
+      if(d.result){const e=parseInt(d.result,16)/1e18;document.getElementById('g-bal').textContent=(e<0.001?e.toFixed(6):e.toFixed(4))+' ETH';return}
+    }catch(e){}
+  }
+}
+fetchBal();
 </script>
 </body>
 </html>
