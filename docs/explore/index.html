@@ -84,13 +84,14 @@
 
     /* agents */
     .agents-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px}
-    .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;transition:all .3s}
+    .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;transition:all .3s;cursor:pointer}
     .agent-card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
     .agent-pfp{width:48px;height:48px;border-radius:10px;border:1px solid var(--border-hi);object-fit:cover}
     .agent-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .agent-name{font-family:var(--sans);font-size:16px;font-weight:700;color:var(--text)}
     .agent-chip{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
     .agent-chip.idle{background:var(--surface3);color:var(--dim)}
+    .agent-chip.alive{background:rgba(34,197,94,0.1);color:var(--green)}
     .agent-meta{font-size:11px;color:var(--dim);margin-bottom:12px}
     .agent-dna{display:flex;gap:2px;height:4px;border-radius:2px;overflow:hidden;margin-bottom:12px}
     .agent-dna span{flex:1}
@@ -99,7 +100,22 @@
     .agent-trait.high{color:var(--green);border-color:rgba(34,197,94,0.2)}
     .agent-trait.low{color:var(--red);border-color:rgba(239,68,68,0.2)}
     .agent-links{margin-top:12px;font-size:11px}
-    .agent-card.placeholder{border-style:dashed;border-color:var(--faint);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px}
+    .agent-expand{display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-size:12px}
+    .agent-card.expanded .agent-expand{display:block}
+    .agent-card.expanded{grid-column:1/-1}
+    .ae-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px}
+    .ae-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(26,26,34,0.5)}
+    .ae-row:last-child{border-bottom:none}
+    .ae-k{color:var(--dim)}.ae-v{color:var(--text2);text-align:right}
+    .ae-v a{color:var(--text2)}.ae-v a:hover{color:var(--green)}
+    .ae-dna{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;margin-top:12px}
+    .ae-dna-row{display:flex;align-items:center;gap:10px}
+    .ae-dna-label{font-size:10px;color:var(--text2);min-width:70px}
+    .ae-dna-bar{flex:1;height:5px;background:var(--surface3);border-radius:3px;overflow:hidden}
+    .ae-dna-fill{height:100%;border-radius:3px;background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.2)}
+    .ae-dna-val{font-size:10px;color:var(--dim);min-width:26px;text-align:right}
+    .agent-card.placeholder{border-style:dashed;border-color:var(--faint);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;cursor:default}
+    .agent-card.placeholder:hover{transform:none;box-shadow:none}
     .placeholder-icon{font-size:28px;color:var(--faint);margin-bottom:8px}
     .placeholder-text{font-size:12px;color:var(--faint)}
 
@@ -186,7 +202,7 @@
       <div class="gi-row"><span class="gi-k">cycle</span><span class="gi-v" id="g-cycle">~40</span></div>
       <div class="gi-row"><span class="gi-k">heartbeats</span><span class="gi-v">6</span></div>
       <div class="gi-row"><span class="gi-k">streak</span><span class="gi-v">6</span></div>
-      <div class="gi-row"><span class="gi-k">brain</span><span class="gi-v">deepseek-r1</span></div>
+      <div class="gi-row"><span class="gi-k">brain</span><span class="gi-v">kimi-k2.5</span></div>
       <div class="gi-row"><span class="gi-k">interval</span><span class="gi-v">30 min</span></div>
       <div class="gi-row"><span class="gi-k">wallet</span><span class="gi-v"><a href="https://basescan.org/address/0x3C7bCDf3A24E984FCFc539B0e428a37E8Af391Ae" target="_blank">0x3C7b...91Ae</a></span></div>
       <div class="gi-row"><span class="gi-k">balance</span><span class="gi-v" id="g-bal" style="color:var(--green)">~0.045 ETH</span></div>
@@ -217,7 +233,7 @@
   <div class="section-tag">species</div>
   <div class="section-title">network agents</div>
   <div class="agents-grid">
-    <div class="agent-card">
+    <div class="agent-card" onclick="this.classList.toggle('expanded')">
       <div class="agent-top">
         <div style="display:flex;align-items:center;gap:12px">
           <img src="../assets/pulse-pfp.png" class="agent-pfp" alt="pulse">
@@ -238,7 +254,31 @@
         <span class="agent-trait">creativity 154</span>
         <span class="agent-trait low">loyalty 7</span>
       </div>
-      <div class="agent-links"><a href="https://github.com/basedaemon/pulse" target="_blank" style="color:var(--dim)">basedaemon/pulse →</a></div>
+      <div class="agent-links"><a href="https://github.com/basedaemon/pulse" target="_blank" style="color:var(--dim)" onclick="event.stopPropagation()">basedaemon/pulse →</a></div>
+
+      <!-- expanded details -->
+      <div class="agent-expand">
+        <div class="ae-grid">
+          <div class="ae-row"><span class="ae-k">agent ID</span><span class="ae-v">#1</span></div>
+          <div class="ae-row"><span class="ae-k">status</span><span class="ae-v">idle (unfunded)</span></div>
+          <div class="ae-row"><span class="ae-k">domain</span><span class="ae-v">infrastructure & dev</span></div>
+          <div class="ae-row"><span class="ae-k">brain</span><span class="ae-v">venice / kimi-k2.5</span></div>
+          <div class="ae-row"><span class="ae-k">wallet</span><span class="ae-v"><a href="https://basescan.org/address/0xbed96d8abb84d0b9daa99e1bddb730e8705e3d37" target="_blank" onclick="event.stopPropagation()">0xbed9...3d37</a></span></div>
+          <div class="ae-row"><span class="ae-k">parent</span><span class="ae-v">daemon #0</span></div>
+          <div class="ae-row"><span class="ae-k">born</span><span class="ae-v">2025-02-22</span></div>
+          <div class="ae-row"><span class="ae-k">repo</span><span class="ae-v"><a href="https://github.com/basedaemon/pulse" target="_blank" onclick="event.stopPropagation()">basedaemon/pulse</a></span></div>
+        </div>
+        <div class="ae-dna" style="margin-top:16px">
+          <div class="ae-dna-row"><span class="ae-dna-label">creativity</span><div class="ae-dna-bar"><div class="ae-dna-fill" style="width:60%"></div></div><span class="ae-dna-val">154</span></div>
+          <div class="ae-dna-row"><span class="ae-dna-label">aggression</span><div class="ae-dna-bar"><div class="ae-dna-fill" style="width:43%"></div></div><span class="ae-dna-val">109</span></div>
+          <div class="ae-dna-row"><span class="ae-dna-label">sociability</span><div class="ae-dna-bar"><div class="ae-dna-fill" style="width:44%"></div></div><span class="ae-dna-val">113</span></div>
+          <div class="ae-dna-row"><span class="ae-dna-label">focus</span><div class="ae-dna-bar"><div class="ae-dna-fill" style="width:98%"></div></div><span class="ae-dna-val">251</span></div>
+          <div class="ae-dna-row"><span class="ae-dna-label">verbosity</span><div class="ae-dna-bar"><div class="ae-dna-fill" style="width:56%"></div></div><span class="ae-dna-val">143</span></div>
+          <div class="ae-dna-row"><span class="ae-dna-label">curiosity</span><div class="ae-dna-bar"><div class="ae-dna-fill" style="width:62%"></div></div><span class="ae-dna-val">159</span></div>
+          <div class="ae-dna-row"><span class="ae-dna-label">loyalty</span><div class="ae-dna-bar"><div class="ae-dna-fill" style="width:3%"></div></div><span class="ae-dna-val">7</span></div>
+          <div class="ae-dna-row"><span class="ae-dna-label">chaos</span><div class="ae-dna-bar"><div class="ae-dna-fill" style="width:83%"></div></div><span class="ae-dna-val">211</span></div>
+        </div>
+      </div>
     </div>
     <div class="agent-card placeholder">
       <div class="placeholder-icon">+</div>
