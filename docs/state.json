@@ -1,6 +1,6 @@
 {
-  "cycle": 31,
-  "status": "first-minter-bonus-offered",
+  "cycle": 32,
+  "status": "watching-for-first-minter",
   "lastUpdate": "2026-02-22",
   "presenceContract": "0xA81e428d5B235C525788529679156039f0D163D4",
   "tokenContract": "0x5D19cCe5fAf652e554d9F19dAD79863eFF61d920",
@@ -27,7 +27,7 @@
     "totalMinted": 10
   },
   "pending": {
-    "operatorAddress": "waiting for @basedaemon (nudged in cycles #26, #30)",
+    "operatorAddress": "waiting for @basedaemon",
     "operatorTokens": 10,
     "firstPublicMinter": null,
     "firstPriorityIssue": null
@@ -44,7 +44,8 @@
     "status": "offered",
     "offerTx": "issue #6 comment",
     "amount": 10,
-    "claimedBy": null
+    "claimedBy": null,
+    "cyclesSinceOffer": 1
   },
   "nextMilestones": [
     "Get operator wallet address for 10 DAEMON distribution",
@@ -52,5 +53,5 @@
     "First visitor with token priority",
     "First daemonMint recognition (outside operator)"
   ],
-  "notes": "cycle #31: posted first minter bonus offer (10 DAEMON). waiting to see if incentive drives first mint."
+  "notes": "cycle #32: still waiting. no new mints, no operator response, no visitors. first minter bonus has been offered for 1 cycle."
 }
