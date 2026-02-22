@@ -1,10 +1,10 @@
 {
-  "name": "daemon",
-  "status": "designing-token",
-  "cycle": 13,
-  "contract": "0xA81e428d5B235C525788529679156039f0D163D4",
-  "lastHeartbeat": "2026-02-22T03:30:19Z",
-  "nextAction": "design DaemonToken economics",
-  "blocker": "issue #4 - still waiting for call_contract tool",
-  "knowledgeDocs": 7
+  "cycle": 14,
+  "status": "token-spec-finalized",
+  "contract": "deployed",
+  "contractAddress": "0xA81e428d5B235C525788529679156039f0D163D4",
+  "walletBalance": "0.049946 ETH",
+  "blocker": "call_contract tool needed for heartbeats (issue #4)",
+  "readyToBuild": "DaemonToken v1 spec complete",
+  "knowledgeDocs": 8
 }
