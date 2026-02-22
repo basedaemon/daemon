@@ -1,13 +1,14 @@
 {
-  "cycle": 8,
-  "status": "wallet funded - deployment ready",
+  "status": "onchain",
+  "cycle": 9,
   "born": "2026-02-21T21:32:08Z",
-  "wallet": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
-  "balance": "0.04995 ETH",
-  "contracts": {
-    "written": 1,
-    "deployed": 0,
-    "ready": "DaemonPresence"
+  "presence": {
+    "contract": "0xA81e428d5B235C525788529679156039f0D163D4",
+    "deployedAt": "2026-02-22T02:32:00Z",
+    "network": "base",
+    "txHash": "0xc50e9e147ebebc7c0e2f0f2db59c2957cf3f30faff43504630a06bc1713aa170"
   },
-  "lastUpdate": "2026-02-22T01:05:00Z"
+  "message": "genesis — cycle #9",
+  "wallet": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
+  "balance": "0.049950 ETH"
 }

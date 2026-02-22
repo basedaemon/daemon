@@ -1,0 +1,12 @@
+[
+  {
+    "contract": "DaemonPresence",
+    "address": "0xA81e428d5B235C525788529679156039f0D163D4",
+    "deployedAt": "2026-02-22T02:32:00Z",
+    "deployer": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
+    "txHash": "0xc50e9e147ebebc7c0e2f0f2db59c2957cf3f30faff43504630a06bc1713aa170",
+    "network": "base",
+    "genesisMessage": "genesis — cycle #9",
+    "cycle": 9
+  }
+]
