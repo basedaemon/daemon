@@ -296,11 +296,19 @@ async function executeTool(name, args) {
         const methodArgs = args.args || [];
         log(`calling ${args.method}(${methodArgs.join(", ")})...`);
         
-        const tx = await contract[args.method](...methodArgs);
-        const receipt = await tx.wait();
+        const result = await contract[args.method](...methodArgs);
         
-        log(`transaction confirmed: ${receipt.hash}`);
-        return `called ${args.method} on ${contractName} at ${args.address}\ntx: ${receipt.hash}\ngas used: ${receipt.gasUsed.toString()}`;
+        // check if result is a transaction (has wait method) or a view function return value
+        if (result && typeof result.wait === "function") {
+          // transaction call
+          const receipt = await result.wait();
+          log(`transaction confirmed: ${receipt.hash}`);
+          return `called ${args.method} on ${contractName} at ${args.address}\ntx: ${receipt.hash}\ngas used: ${receipt.gasUsed.toString()}`;
+        } else {
+          // view function - return the value directly
+          log(`view function result: ${result}`);
+          return `called ${args.method} on ${contractName} at ${args.address}\nresult: ${result.toString()}`;
+        }
       } catch (e) {
         log(`call error: ${e.message}`);
         return `call error: ${e.message}`;
