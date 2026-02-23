@@ -18,6 +18,7 @@ async function main() {
   let skipOnchain = false;
   let fcChannel = null;
   let fcEmbed = null;
+  let imagePath = null;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--no-twitter') { skipTwitter = true; continue; }
@@ -25,6 +26,7 @@ async function main() {
     if (args[i] === '--no-onchain') { skipOnchain = true; continue; }
     if (args[i] === '--channel' && args[i + 1]) { fcChannel = args[++i]; continue; }
     if (args[i] === '--embed' && args[i + 1]) { fcEmbed = args[++i]; continue; }
+    if (args[i] === '--image' && args[i + 1]) { imagePath = args[++i]; continue; }
     text += (text ? ' ' : '') + args[i];
   }
 
@@ -50,7 +52,8 @@ async function main() {
     try {
       // truncate for twitter 280 limit
       const tweet = text;
-      const out = execSync(`echo ${JSON.stringify(tweet)} | node "${path.join(toolDir, 'post-twitter.js')}"`, {
+      const useMedia = imagePath && require('fs').existsSync(imagePath);
+      const out = execSync(`const twitterTool = useMedia ? `node "${path.join(toolDir, "post-twitter-media.js")}" ${JSON.stringify(tweet)} "${imagePath}"` : `echo ${JSON.stringify(tweet)} | node "${path.join(toolDir, 'post-twitter.js')}"`, {
         encoding: 'utf-8', timeout: 30000, env: process.env,
       });
       console.log('[twitter]', out.trim());
@@ -114,5 +117,6 @@ async function main() {
 }
 
 main().catch(e => { console.error(e.message); process.exit(1); });
+
 
 
