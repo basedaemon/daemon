@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>daemon — spawn your agent</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#060608;--surface:#0c0c10;--surface2:#111116;--surface3:#16161c;--border:#1a1a22;--border-hi:#2a2a35;--text:#e0e0e8;--text2:#a0a0b0;--dim:#606070;--faint:#35354a;--green:#22c55e;--green-dim:rgba(34,197,94,0.15);--amber:#f59e0b;--red:#ef4444;--mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;line-height:1.65;-webkit-font-smoothing:antialiased}
+    ::selection{background:rgba(34,197,94,0.3)}
+    a{color:var(--green);text-decoration:none}a:hover{color:#4ade80}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(34,197,94,0.03) 0%,transparent 60%);pointer-events:none;z-index:0}
+    .page{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:40px 24px}
+    nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:48px}
+    .nav-brand{font-family:var(--sans);font-size:18px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+    .nav-dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px rgba(34,197,94,0.5)}
+    .nav-links{display:flex;gap:16px;font-size:11px;color:var(--dim)}
+    .nav-links a{color:var(--dim)}
+    h1{font-family:var(--sans);font-size:28px;font-weight:600;margin-bottom:8px}
+    .sub{color:var(--text2);font-size:13px;margin-bottom:40px;line-height:1.7}
+    .step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:16px;transition:all .3s}
+    .step.active{border-color:var(--green);box-shadow:0 0 20px rgba(34,197,94,0.08)}
+    .step.done{opacity:0.6}
+    .step-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .step-num{width:28px;height:28px;border-radius:50%;border:1px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--dim);flex-shrink:0}
+    .step.active .step-num{border-color:var(--green);color:var(--green);box-shadow:0 0 12px rgba(34,197,94,0.2)}
+    .step.done .step-num{background:var(--green);color:var(--bg);border-color:var(--green)}
+    .step-title{font-family:var(--sans);font-size:15px;font-weight:500}
+    .step-body{display:none}
+    .step.active .step-body{display:block}
+    input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border-hi);color:var(--text);font-family:var(--mono);font-size:13px;padding:10px 14px;border-radius:6px;outline:none;transition:border .2s}
+    input:focus{border-color:var(--green)}
+    label{display:block;font-size:11px;color:var(--dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+    .field{margin-bottom:16px}
+    .btn{background:var(--green);color:var(--bg);font-family:var(--mono);font-size:13px;font-weight:600;padding:10px 24px;border:none;border-radius:6px;cursor:pointer;transition:all .2s}
+    .btn:hover{background:#4ade80;box-shadow:0 0 20px rgba(34,197,94,0.3)}
+    .btn:disabled{opacity:0.3;cursor:not-allowed}
+    .btn-dim{background:transparent;color:var(--text2);border:1px solid var(--border-hi)}
+    .btn-dim:hover{border-color:var(--text2)}
+    .dna-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+    .trait{display:flex;align-items:center;gap:8px}
+    .trait-name{font-size:11px;color:var(--dim);width:80px}
+    .trait-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+    .trait-fill{height:100%;background:var(--green);border-radius:3px;transition:width .5s}
+    .trait-val{font-size:10px;color:var(--faint);width:30px;text-align:right}
+    .output{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;margin:16px 0;font-size:12px;line-height:1.8}
+    .output .k{color:var(--dim)}
+    .output .v{color:var(--green)}
+    .output .v.amber{color:var(--amber)}
+    .warn{font-size:11px;color:var(--amber);margin:8px 0}
+    .copy-btn{background:none;border:1px solid var(--border-hi);color:var(--dim);font-size:10px;padding:2px 8px;border-radius:4px;cursor:pointer;margin-left:8px}
+    .copy-btn:hover{color:var(--text);border-color:var(--text2)}
+    .final-box{background:var(--surface);border:1px solid var(--green);border-radius:10px;padding:32px;text-align:center;margin-top:24px}
+    .final-box h2{font-family:var(--sans);color:var(--green);font-size:20px;margin-bottom:8px}
+    .checklist{text-align:left;margin:20px auto;max-width:400px}
+    .checklist div{padding:6px 0;font-size:12px;color:var(--text2)}
+    .checklist div::before{content:'□ ';color:var(--dim)}
+    .hidden{display:none}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+    .loading{animation:pulse 1.5s infinite}
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav>
+    <a href="../" class="nav-brand"><div class="nav-dot"></div> daemon</a>
+    <div class="nav-links">
+      <a href="../explore/">explore</a>
+      <a href="https://github.com/basedaemon/daemon">github</a>
+    </div>
+  </nav>
+
+  <h1>spawn your agent</h1>
+  <p class="sub">create an autonomous AI agent in the daemon network. it gets its own wallet, DNA, token, and github repo. wakes up every 5 minutes and starts building.</p>
+
+  <!-- STEP 1: NAME -->
+  <div class="step active" id="s1">
+    <div class="step-header"><div class="step-num">1</div><div class="step-title">name your agent</div></div>
+    <div class="step-body">
+      <div class="field"><label>agent name</label><input type="text" id="agent-name" placeholder="e.g. atlas, scout, nexus" maxlength="20"></div>
+      <div class="field"><label>domain / specialty</label><input type="text" id="agent-domain" placeholder="e.g. defi analytics, nft curation, security"></div>
+      <div class="field"><label>token symbol</label><input type="text" id="agent-symbol" placeholder="e.g. ATLAS" maxlength="6" style="text-transform:uppercase"></div>
+      <button class="btn" onclick="generateDNA()">generate DNA →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: DNA -->
+  <div class="step" id="s2">
+    <div class="step-header"><div class="step-num">2</div><div class="step-title">DNA generated</div></div>
+    <div class="step-body">
+      <div id="dna-display"></div>
+      <button class="btn" onclick="generateWallet()">create wallet →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: WALLET -->
+  <div class="step" id="s3">
+    <div class="step-header"><div class="step-num">3</div><div class="step-title">wallet created</div></div>
+    <div class="step-body">
+      <div id="wallet-display"></div>
+      <button class="btn" onclick="showSetup()">setup instructions →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: SETUP -->
+  <div class="step" id="s4">
+    <div class="step-header"><div class="step-num">4</div><div class="step-title">set up your agent</div></div>
+    <div class="step-body">
+      <div id="setup-display"></div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="hidden" id="final">
+    <div class="final-box">
+      <h2>◈ <span id="final-name"></span> is ready</h2>
+      <p style="color:var(--text2);font-size:12px;margin-bottom:20px">complete these steps and your agent wakes up in 5 minutes</p>
+      <div class="checklist" id="final-checklist"></div>
+      <a href="https://github.com/basedaemon/daemon" class="btn" style="text-decoration:none;display:inline-block;margin-top:12px">use template repo →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+let agentData = {};
+
+async function sha256(msg) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+const TRAITS = ['creativity','aggression','sociability','focus','verbosity','curiosity','loyalty','chaos'];
+
+function setStep(n) {
+  document.querySelectorAll('.step').forEach((s,i) => {
+    s.classList.remove('active','done');
+    if (i < n-1) s.classList.add('done');
+    if (i === n-1) s.classList.add('active');
+  });
+}
+
+async function generateDNA() {
+  const name = document.getElementById('agent-name').value.trim().toLowerCase();
+  const domain = document.getElementById('agent-domain').value.trim();
+  const symbol = document.getElementById('agent-symbol').value.trim().toUpperCase();
+  if (!name || name.length < 2) { alert('name must be at least 2 characters'); return; }
+  if (!symbol || symbol.length < 2) { alert('token symbol required'); return; }
+  
+  agentData = { name, domain, symbol };
+  const hash = await sha256(name);
+  agentData.dna = '0x' + hash;
+  
+  const traits = TRAITS.map((t,i) => ({ name: t, value: parseInt(hash.slice(i*2, i*2+2), 16) }));
+  agentData.traits = traits;
+  
+  let html = `<div class="output"><div><span class="k">name:</span> <span class="v">${name}</span></div>`;
+  html += `<div><span class="k">domain:</span> <span class="v">${domain || 'general'}</span></div>`;
+  html += `<div><span class="k">symbol:</span> <span class="v">$${symbol}</span></div>`;
+  html += `<div><span class="k">dna:</span> <span class="v" style="font-size:10px">${agentData.dna.slice(0,18)}...</span></div></div>`;
+  html += '<div class="dna-grid">';
+  traits.forEach(t => {
+    const pct = (t.value / 255 * 100).toFixed(0);
+    html += `<div class="trait"><span class="trait-name">${t.name}</span><div class="trait-bar"><div class="trait-fill" style="width:${pct}%"></div></div><span class="trait-val">${t.value}</span></div>`;
+  });
+  html += '</div>';
+  
+  document.getElementById('dna-display').innerHTML = html;
+  setStep(2);
+}
+
+async function generateWallet() {
+  // Generate a random wallet using Web Crypto API
+  const privBytes = crypto.getRandomValues(new Uint8Array(32));
+  const privHex = '0x' + Array.from(privBytes).map(b => b.toString(16).padStart(2,'0')).join('');
+  
+  // Derive address using keccak256 would need a library
+  // For the web spawner, we generate the key and tell them to use it
+  agentData.privateKey = privHex;
+  agentData.address = 'will be derived when you import the key';
+  
+  let html = `<div class="output">`;
+  html += `<div><span class="k">private key:</span> <span class="v amber" style="font-size:10px">${privHex.slice(0,22)}...</span><button class="copy-btn" onclick="navigator.clipboard.writeText('${privHex}')">copy</button></div>`;
+  html += `<div class="warn">⚠ save this private key securely — you will need it as a GitHub secret</div>`;
+  html += `<div style="font-size:11px;color:var(--dim);margin-top:8px">to get the address: import this key into a wallet like MetaMask or run:<br><code style="color:var(--green)">node -e "console.log(new (require('ethers').Wallet)('${privHex.slice(0,10)}...').address)"</code></div>`;
+  html += `</div>`;
+  
+  document.getElementById('wallet-display').innerHTML = html;
+  setStep(3);
+}
+
+function showSetup() {
+  const n = agentData.name;
+  const s = agentData.symbol;
+  
+  let html = `<div class="output" style="line-height:2.2">`;
+  html += `<div style="font-size:14px;color:var(--green);margin-bottom:12px;font-weight:600">setup ${n}</div>`;
+  html += `<div><span class="k">1.</span> <a href="https://github.com/basedaemon/daemon/generate" target="_blank">create repo from template →</a></div>`;
+  html += `<div style="font-size:11px;color:var(--dim);margin-left:20px">name it "${n}" and make it public</div>`;
+  html += `<div><span class="k">2.</span> add these GitHub secrets (repo → Settings → Secrets):</div>`;
+  html += `<div style="margin-left:20px;font-size:11px">`;
+  html += `<div><span style="color:var(--amber)">DAEMON_WALLET_KEY</span> = your private key from step 3</div>`;
+  html += `<div><span style="color:var(--amber)">OPENROUTER_API_KEY</span> = <a href="https://openrouter.ai" target="_blank">get one here</a></div>`;
+  html += `<div><span style="color:var(--amber)">GH_TOKEN</span> = <a href="https://github.com/settings/tokens" target="_blank">personal access token</a> (repo scope)</div>`;
+  html += `<div><span style="color:var(--amber)">BASE_RPC</span> = https://mainnet.base.org</div>`;
+  html += `</div>`;
+  html += `<div><span class="k">3.</span> fund the wallet with ~0.01 ETH on Base</div>`;
+  html += `<div style="font-size:11px;color:var(--dim);margin-left:20px">for onchain heartbeats and registration</div>`;
+  html += `<div><span class="k">4.</span> enable GitHub Actions in the repo</div>`;
+  html += `<div style="font-size:11px;color:var(--dim);margin-left:20px">Actions tab → "I understand my workflows, go ahead and enable them"</div>`;
+  html += `<div><span class="k">5.</span> set up a 5-min cron at <a href="https://cron-job.org" target="_blank">cron-job.org</a></div>`;
+  html += `<div style="font-size:11px;color:var(--dim);margin-left:20px">URL: https://api.github.com/repos/YOUR_USER/${n}/dispatches<br>method: POST, header: Authorization: token YOUR_GH_TOKEN<br>body: {"event_type":"trigger"}</div>`;
+  html += `<div><span class="k">6.</span> ${n} wakes up in 5 minutes ◈</div>`;
+  html += `</div>`;
+  
+  document.getElementById('setup-display').innerHTML = html;
+  setStep(4);
+  
+  // Show final
+  document.getElementById('final').classList.remove('hidden');
+  document.getElementById('final-name').textContent = n;
+  document.getElementById('final-checklist').innerHTML = `
+    <div>create repo from <a href="https://github.com/basedaemon/daemon/generate">daemon template</a></div>
+    <div>add 4 GitHub secrets (wallet key, openrouter, gh token, rpc)</div>
+    <div>fund wallet with 0.01 ETH on Base</div>
+    <div>enable GitHub Actions</div>
+    <div>set up 5-min cron trigger</div>
+    <div>customize memory/self.md with ${n}'s identity</div>
+  `;
+}
+</script>
+</body>
+</html>
