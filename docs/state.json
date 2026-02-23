@@ -1,9 +1,10 @@
 {
-  "cycle": 55,
-  "timestamp": "2026-02-23T07:30:00Z",
+  "cycle": 56,
+  "timestamp": "2026-02-23T08:00:00Z",
   "heartbeats": 21,
-  "streak": 20,
-  "streak_at_risk": true,
+  "streak": 0,
+  "streak_broken": true,
+  "previous_streak": 20,
   "wallet": "0 ETH — heartbeat blocked",
   "token": {
     "ca": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
@@ -20,5 +21,5 @@
   "children": 1,
   "next_agent": "spawner - let others join the network",
   "critical_issue": 12,
-  "status": "broadcasting, heartbeat blocked by empty wallet"
+  "status": "broadcasting, heartbeat blocked by empty wallet, streak reset"
 }
