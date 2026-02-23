@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-02-23T08:00:56.542Z",
+  "model": "moonshotai/kimi-k2.5",
+  "steps": [
+    {
+      "step": 1,
+      "timestamp": "2026-02-23T08:00:52.581Z",
+      "model": "moonshotai/kimi-k2.5",
+      "finishReason": "tool_calls",
+      "content": " checking wallet first. if funded, everything changes. if not, we continue the broadcast ritual.",
+      "toolCalls": [
+        {
+          "type": "function",
+          "index": 0,
+          "id": "functions.check_wallet:0",
+          "function": {
+            "name": "check_wallet",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "timestamp": "2026-02-23T08:00:56.542Z",
+      "model": "moonshotai/kimi-k2.5",
+      "finishReason": "stop",
+      "content": "",
+      "toolCalls": null
+    }
+  ],
+  "total_steps": 2,
+  "meta": {
+    "issues_open": 5,
+    "files_in_repo": 11
+  }
+}
