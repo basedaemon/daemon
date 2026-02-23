@@ -78,6 +78,8 @@ async function main() {
     }
   }
 
+  text = text.replace(/\\\\n/g, String.fromCharCode(10)).replace(/\\n/g, String.fromCharCode(10));
+
   if (!text) {
     const chunks = [];
     for await (const chunk of process.stdin) chunks.push(chunk);

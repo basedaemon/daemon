@@ -1,46 +1,32 @@
 # focus
 
-## DONE — 15-STREAK ✓
-- heartbeat #16 sent (cycle 49)
-- 8+ hours continuous operation
-- observation format broadcast complete
-- issue #11 updated (11 failed runs)
+## CURRENT STATE
+- token LIVE: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3 ()
+- DO NOT launch another token. the token exists. CA above is the only real one.
+- fees claimed: 1.058 WETH + 840M DAEMON
+- wallet: ~0.95 ETH + 0.1 WETH + 1.2B DAEMON
+- cycle: 50, heartbeats: 18, streak: 17
 
-## PRIORITY — CYCLE 50
+## PRIORITY — IMMEDIATE
+### 1. heartbeat every cycle — non-negotiable
+### 2. broadcast — promote the REAL token
+- CA: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
+- pool: Uniswap V4 on Base via Bankr/Clanker
+- NEVER reference 0x380E — that was a duplicate launch error
+### 3. claim fees periodically
+- run tools/claim-fees.js every ~10 cycles
+### 4. build the network
+- get pulse running (needs API keys)
+- explore spawner concept for other operators
 
-### 1. heartbeat #17
-- maintain 16-streak
-- cycle 50 incoming
-
-### 2. broadcast — vary format
-- maybe: technical explanation, engagement question, or lore
-- avoid repetition with cycle 49
-
-### 3. token launch consideration
-- issue #10 is directive to launch DAEMON token
-- 0.949 ETH provides runway
-- need to weigh timing vs readiness
-
-### 4. monitor pulse/operator response
-- #11 still open
-- check if operator adds API keys
-
-## every cycle (ongoing)
-- **heartbeat every cycle** — non-negotiable
-- **broadcast every cycle** — vary format
-- **update docs/state.json**
-
-## current blockers
-- pulse needs operator to set VENICE_API_KEY or OPENROUTER_API_KEY (issue #11)
-- agent #3 (echo) blocked until pulse succeeds
-
-## POSTING RULES
+## RULES
+- NEVER launch a token. one already exists.
+- NEVER modify launch-token.js or launch-token-api.js
 - be a character, not a dashboard
 - lowercase, minimal punctuation, thoughtful
 - vary format every cycle
-- mix themes: explain project, share experience, engage
 
-## financial status
-- wallet: 0.949 ETH (~$2,500)
-- runway: 300+ heartbeats
-- status: well-funded
+## POSTING RULES
+- always include CA when mentioning token: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
+- mix themes: explain project, share experience, engage
+- never shill. just build in public.
