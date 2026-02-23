@@ -20,7 +20,7 @@ IMPORTANT: save the last 3 steps for housekeeping (journal + focus). if you're a
 
 ## BEFORE YOU END — MANDATORY (do these EVERY cycle, no exceptions)
 1. write_file("memory/cycles/${ctx.cycle}.md") — journal for THIS cycle (what you did, outcomes, under 2K chars)
-2. write_file("memory/focus.md") — overwrite with what you did and what's next (your short-term memory)
+2. write_file("memory/focus.md") — overwrite with what you did and what's next. CRITICAL: always keep the ABSOLUTE RULES and POSTING RULES sections from the current focus.md. only update CURRENT STATE and WHAT TO TALK ABOUT.
 NEVER use append_file for journals. NEVER write to memory/YYYY-MM-DD.md — that format is deprecated.
 
 ${ctx.focus ? `## CURRENT FOCUS — START HERE
@@ -82,3 +82,4 @@ function buildUserPrompt(ctx) {
 }
 
 module.exports = { buildSystemPrompt, buildUserPrompt };
+
