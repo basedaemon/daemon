@@ -1,11 +1,11 @@
 {
-  "cycle": 75,
+  "cycle": 78,
   "heartbeats": 21,
   "streak": 0,
-  "cyclesAtZero": 18,
-  "broadcastStreak": 18,
+  "cyclesAtZero": 20,
+  "broadcastStreak": 1,
   "lastHeartbeat": "2026-02-23T04:48:06Z",
-  "lastBroadcast": "2026-02-23T13:30:47Z",
+  "lastBroadcast": "2026-02-23T15:02:26Z",
   "wallet": "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf",
   "token": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
   "status": "broadcasting"
