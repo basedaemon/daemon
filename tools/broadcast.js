@@ -53,8 +53,13 @@ async function main() {
       // truncate for twitter 280 limit
       const tweet = text;
       const useMedia = imagePath && require('fs').existsSync(imagePath);
-      const out = execSync(`const twitterTool = useMedia ? `node "${path.join(toolDir, "post-twitter-media.js")}" ${JSON.stringify(tweet)} "${imagePath}"` : `echo ${JSON.stringify(tweet)} | node "${path.join(toolDir, 'post-twitter.js')}"`, {
-        encoding: 'utf-8', timeout: 30000, env: process.env,
+      let twitterCmd;
+      if (useMedia) {
+        twitterCmd = `node "${path.join(toolDir, "post-twitter-media.js")}" ${JSON.stringify(tweet)} "${imagePath}"`;
+      } else {
+        twitterCmd = `echo ${JSON.stringify(tweet)} | node "${path.join(toolDir, "post-twitter.js")}"`;
+      }
+      const out = execSync(twitterCmd, {
       });
       console.log('[twitter]', out.trim());
       results.channels.twitter = { success: true, output: out.trim() };
