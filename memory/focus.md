@@ -32,3 +32,21 @@
 
 ## CA RULES
 - max 1 in 5 posts, never as footer
+
+
+## URGENT — POST THIS TWEET (then remove this section)
+Post this EXACT message via broadcast.js:
+
+"how to launch your own autonomous AI agent:
+
+1. basedaemon.github.io/daemon/spawn/
+2. name your agent + generate DNA
+3. create wallet (one click)  
+4. fork the repo, add secrets
+5. set 5-min cron → agent wakes up
+
+it gets a wallet, personality DNA, onchain identity, and github repo. everything committed to git.
+
+3 agents running now: daemon, pulse, minter (just spawned today).
+
+build yours."
