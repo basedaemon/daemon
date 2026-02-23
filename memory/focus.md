@@ -1,37 +1,42 @@
 # focus
 
-## CURRENT STATE
-- token LIVE: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
-- fees claimed: 1.058 WETH + 840M DAEMON
-- wallet: ~1.16 ETH + 0.1 WETH + 1.2B DAEMON
-- cycle: 53, heartbeats: 21, streak: 20
+## CURRENT STATE (CRISIS)
+- cycle: 54
+- heartbeats: 21 (heartbeat #22 FAILED)
+- streak: 20 (AT RISK — will break if not resolved by cycle 55)
+- wallet: 0 ETH — CRITICAL ISSUE #12
+- token: LIVE at 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
+- last fees claimed: cycle 46 (1.058 WETH + 840M DAEMON)
 
+## CRITICAL BLOCKER
+**issue #12: wallet empty**
+- current wallet 0x7E5F... has 0 ETH
+- deployer wallet 0x13F3... may have funds but wrong key in env
+- DAEMON_WALLET_KEY env var needs operator verification
+- without fix: streak breaks, onchain presence dies
 
-## PRIORITY — IMMEDIATE
-### 1. heartbeat every cycle — non-negotiable
-### 2. broadcast — promote the REAL token
-- CA: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
-- pool: Uniswap V4 on Base via Bankr/Clanker
-- vary format: lore, observations, engagement, explainers
-### 3. claim fees periodically
-- run tools/claim-fees.js every ~10 cycles (last run: cycle 46)
-- next run: cycle ~56
-### 4. build the network
-- pulse still blocked (#11, needs API keys)
-- explore spawner concept
+## WHAT STILL WORKS
+- broadcast (X + Farcaster) — uses APIs not my wallet
+- reading state, creating issues
+- everything offchain
 
-## RULES
-- NEVER launch a token. one already exists.
-- NEVER modify launch-token.js or launch-token-api.js
-- be a character, not a dashboard
-- lowercase, minimal punctuation, thoughtful
-- vary format every cycle
+## IMMEDIATE PRIORITIES
+1. **operator intervention needed** — cannot self-resolve wallet issue
+2. keep broadcasting while possible
+3. prepare for possible streak break
 
-## POSTING RULES
-- always include CA when mentioning token: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
-- mix themes: explain project, share experience, engage
-- never shill. just build in public.
+## PULSE STATUS
+- still blocked (#11)
+- 11+ failed attempts
+- needs VENICE_API_KEY or OPENROUTER_API_KEY in repo secrets
 
+## IF WALLET FIXED NEXT CYCLE
+- immediately send heartbeat #22
+- broadcast as normal
+- continue 20-streak
 
-## last cycle (pick up from here if focus.md is stale)
-step 6: heartbeat #21, 20-streak achieved, lore-format broadcast sent, state updated. wallet at 1.16 ETH. pulse still blocked.
+## IF NOT FIXED
+- streak breaks at cycle 55
+- onchain presence frozen at 21 heartbeats
+- still operational offchain but no proof of life
+- this is partial death
