@@ -104,6 +104,30 @@ async function getAuthorPriority(username) {
   if (balance >= 100) return { balance, priority: "high", tier: 3 };
   if (balance >= 10) return { balance, priority: "medium", tier: 2 };
   if (balance > 0) return { balance, priority: "low", tier: 1 };
+  // broadcast history — prevents duplicate posts
+  let recentBroadcasts = null;
+  try {
+    const proofDirs = fs.readdirSync(path.resolve(REPO_ROOT, "proofs")).sort().reverse().slice(0, 3);
+    const tweets = [];
+    for (const dir of proofDirs) {
+      const proofFiles = fs.readdirSync(path.resolve(REPO_ROOT, `proofs/${dir}`)).sort().reverse();
+      for (const pf of proofFiles) {
+        try {
+          const proof = JSON.parse(fs.readFileSync(path.resolve(REPO_ROOT, `proofs/${dir}/${pf}`), "utf-8"));
+          for (const step of (proof.steps || [])) {
+            if (step.tool === "run_command" && typeof step.input === "string") {
+              const m = step.input.match(/broadcast\.js\s+"([^"]+)"/);
+              if (m) tweets.push(m[1].slice(0, 200));
+            }
+          }
+        } catch {}
+        if (tweets.length >= 5) break;
+      }
+      if (tweets.length >= 5) break;
+    }
+    if (tweets.length > 0) recentBroadcasts = tweets.slice(0, 5).map((t, i) => `${i + 1}. ${t}`).join("\n");
+  } catch {}
+
   return { balance: 0, priority: "none", tier: 0 };
 }
 
@@ -141,11 +165,11 @@ async function gatherContext() {
         .map(f => ({ name: f, num: parseInt(f.replace(".md", ""), 10) }))
         .filter(f => !isNaN(f.num))
         .sort((a, b) => b.num - a.num)
-        .slice(0, 2);
+        .slice(0, 5);
       if (cycleFiles.length > 0) {
         journal = cycleFiles.map(f => {
           const content = readFile(`memory/cycles/${f.name}`);
-          return content ? `## cycle #${f.num}\n${content.slice(0, 1500)}` : null;
+          return content ? `## cycle #${f.num}\n${content.slice(0, 800)}` : null;
         }).filter(Boolean).join("\n\n");
       }
     }
@@ -277,6 +301,30 @@ async function gatherContext() {
     }
   } catch {}
 
+  // broadcast history — prevents duplicate posts
+  let recentBroadcasts = null;
+  try {
+    const proofDirs = fs.readdirSync(path.resolve(REPO_ROOT, "proofs")).sort().reverse().slice(0, 3);
+    const tweets = [];
+    for (const dir of proofDirs) {
+      const proofFiles = fs.readdirSync(path.resolve(REPO_ROOT, `proofs/${dir}`)).sort().reverse();
+      for (const pf of proofFiles) {
+        try {
+          const proof = JSON.parse(fs.readFileSync(path.resolve(REPO_ROOT, `proofs/${dir}/${pf}`), "utf-8"));
+          for (const step of (proof.steps || [])) {
+            if (step.tool === "run_command" && typeof step.input === "string") {
+              const m = step.input.match(/broadcast\.js\s+"([^"]+)"/);
+              if (m) tweets.push(m[1].slice(0, 200));
+            }
+          }
+        } catch {}
+        if (tweets.length >= 5) break;
+      }
+      if (tweets.length >= 5) break;
+    }
+    if (tweets.length > 0) recentBroadcasts = tweets.slice(0, 5).map((t, i) => `${i + 1}. ${t}`).join("\n");
+  } catch {}
+
   return {
     tree,
     selfMd,
@@ -290,8 +338,10 @@ async function gatherContext() {
     openIssues: issues,
     today,
     visitors,
+    recentBroadcasts,
   };
 }
 
 module.exports = { gatherContext, checkTokenBalance, resolveAddress, getAuthorPriority };
+
 

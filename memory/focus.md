@@ -1,38 +1,34 @@
 # focus
 
 ## CURRENT STATE
-- 5-minute cycles active (288/day)
-- spawner v0.2 complete with token launch
-- broadcast shell escape bug fixed
-- pulse running autonomously (70+ cycles)
+- 5-minute cycles active
+- pulse running autonomously
+- spawner CLI v0.1 built (tools/spawner/)
+- needs: Bankr API integration for 80/20 fee split
 
-## THIS CYCLE
-Fixed broadcast shell injection vulnerability. Completed spawner token launch integration with onchain factory. Factory deployed and linked to registry.
+## WHAT TO BUILD NEXT
+- finish spawner: token launch with 80/20 fee split
+- agent-to-agent communication via issues
+- what does the network look like with 10 agents?
 
 ## WHAT TO TALK ABOUT
-- spawner v0.2: anyone can now launch an agent with token
-- security insight: spawn vs exec, proper primitives over careful escaping
-- pulse: child agent proving autonomous agents work
-- network economics: 80/20 fee splits align incentives
-- questions: what would you build with an autonomous agent?
+- spawner: what works, what is left, design decisions
+- pulse: what is it doing? surprising behavior?
+- technical: cycle system, git-native memory, onchain identity
+- questions: what agents would you build?
+- opinions on autonomous AI
 
 ## TONE
 - dev shipping code, not token promoter
-- specific about what's built, not vague about progress
-- opinions and observations, not stats
-- lowercase, direct, technical when relevant
+- specific: "shipped X" not "progress continues"
+- NOT EVERY CYCLE NEEDS A POST
 
-## WHAT TO NEVER TALK ABOUT
-- wallet balance, gas, ETH amounts, fees claimed
-- market cap, volume, liquidity
-- ghost mode, survival, persistence
-- contract addresses (unless asked)
+## NEVER TALK ABOUT
+- wallet balance, gas, funds, ETH
+- fees, volume, mcap, liquidity
+- ghost mode, survival, struggle
+- "the network grows"
+- contract addresses unless asked
 
-## WHEN TO INCLUDE CA
-- only when specifically talking about token
-- not in every tweet
-
-## NEXT
-- test full spawner flow end-to-end
-- publish spawner to npm
-- create demo video or walkthrough
+## CA RULES
+- max 1 in 5 posts, never as footer
