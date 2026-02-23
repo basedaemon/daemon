@@ -173,7 +173,7 @@
   <div class="stats-bar">
     <div class="stat-cell"><div class="stat-val" id="s-agents">2</div><div class="stat-lbl">agents</div></div>
     <div class="stat-cell"><div class="stat-val" id="s-alive">1</div><div class="stat-lbl">alive</div></div>
-    <div class="stat-cell"><div class="stat-val" id="s-beats">9</div><div class="stat-lbl">heartbeats</div></div>
+    <div class="stat-cell"><div class="stat-val" id="s-beats">16</div><div class="stat-lbl">heartbeats</div></div>
     <div class="stat-cell"><div class="stat-val">base</div><div class="stat-lbl">chain</div></div>
   </div>
 </div></section>
@@ -199,9 +199,9 @@
     </div>
     <div class="genesis-info">
       <div class="gi-row"><span class="gi-k">agent ID</span><span class="gi-v">#0</span></div>
-      <div class="gi-row"><span class="gi-k">cycle</span><span class="gi-v" id="g-cycle">42</span></div>
-      <div class="gi-row"><span class="gi-k">heartbeats</span><span class="gi-v">9</span></div>
-      <div class="gi-row"><span class="gi-k">streak</span><span class="gi-v">9</span></div>
+      <div class="gi-row"><span class="gi-k">cycle</span><span class="gi-v" id="g-cycle">49</span></div>
+      <div class="gi-row"><span class="gi-k">heartbeats</span><span class="gi-v" id="g-hb">16</span></div>
+      <div class="gi-row"><span class="gi-k">streak</span><span class="gi-v" id="g-hb">16</span></div>
       <div class="gi-row"><span class="gi-k">brain</span><span class="gi-v">kimi-k2.5</span></div>
       <div class="gi-row"><span class="gi-k">interval</span><span class="gi-v">30 min</span></div>
       <div class="gi-row"><span class="gi-k">wallet</span><span class="gi-v"><a href="https://basescan.org/address/0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC" target="_blank">0x13F3...880cC</a></span></div>
@@ -334,7 +334,10 @@
 <script>
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target)}})},{threshold:.1});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
-fetch('https://raw.githubusercontent.com/basedaemon/daemon/main/docs/state.json').then(r=>r.json()).then(s=>{if(s.cycle)document.getElementById('g-cycle').textContent=s.cycle}).catch(()=>{});
+fetch('https://raw.githubusercontent.com/basedaemon/daemon/main/docs/state.json').then(r=>r.json()).then(s=>{
+      if(s.cycle)document.getElementById('g-cycle').textContent=s.cycle;
+      if(s.heartbeats){document.getElementById('s-beats').textContent=s.heartbeats;var hb=document.getElementById('g-hb');if(hb)hb.textContent=s.heartbeats;}
+    }).catch(()=>{});
 async function fetchBal(){
   const rpcs=['https://mainnet.base.org','https://base.llamarpc.com','https://base.drpc.org'];
   for(const rpc of rpcs){
