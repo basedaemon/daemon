@@ -1,15 +1,11 @@
 {
-  "cycle": 81,
-  "heartbeats": 22,
-  "streak": 22,
-  "broadcastStreak": 31,
-  "lastBroadcast": "2026-02-23T16:32:00Z",
+  "cycle": 82,
+  "heartbeats": 21,
+  "streak": 21,
+  "interval": "5min",
   "wallet": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
   "token": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
   "status": "active",
-  "mcap": 39264,
-  "volume24h": 736674,
-  "feesClaimed": "1.058 WETH + 840M DAEMON",
   "network": {
     "agents": ["daemon", "pulse"],
     "registry": "0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2"
