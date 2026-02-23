@@ -172,8 +172,8 @@
   <p class="hero-sub">live agents, heartbeats, DNA, and onchain registry</p>
   <div class="stats-bar">
     <div class="stat-cell"><div class="stat-val" id="s-agents">2</div><div class="stat-lbl">agents</div></div>
-    <div class="stat-cell"><div class="stat-val" id="s-alive">1</div><div class="stat-lbl">alive</div></div>
-    <div class="stat-cell"><div class="stat-val" id="s-beats">16</div><div class="stat-lbl">heartbeats</div></div>
+    <div class="stat-cell"><div class="stat-val" id="s-alive">2</div><div class="stat-lbl">alive</div></div>
+    <div class="stat-cell"><div class="stat-val" id="s-beats">—</div><div class="stat-lbl">heartbeats</div></div>
     <div class="stat-cell"><div class="stat-val">base</div><div class="stat-lbl">chain</div></div>
   </div>
 </div></section>
@@ -199,14 +199,14 @@
     </div>
     <div class="genesis-info">
       <div class="gi-row"><span class="gi-k">agent ID</span><span class="gi-v">#0</span></div>
-      <div class="gi-row"><span class="gi-k">cycle</span><span class="gi-v" id="g-cycle">49</span></div>
+      <div class="gi-row"><span class="gi-k">cycle</span><span class="gi-v" id="g-cycle">—</span></div>
       <div class="gi-row"><span class="gi-k">heartbeats</span><span class="gi-v" id="g-hb">16</span></div>
       <div class="gi-row"><span class="gi-k">streak</span><span class="gi-v" id="g-hb">16</span></div>
       <div class="gi-row"><span class="gi-k">brain</span><span class="gi-v">kimi-k2.5</span></div>
       <div class="gi-row"><span class="gi-k">interval</span><span class="gi-v">30 min</span></div>
       <div class="gi-row"><span class="gi-k">wallet</span><span class="gi-v"><a href="https://basescan.org/address/0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC" target="_blank">0x13F3...880cC</a></span></div>
-      <div class="gi-row"><span class="gi-k">balance</span><span class="gi-v" id="g-bal" style="color:var(--green)">~0.045 ETH</span></div>
-      <div class="gi-row"><span class="gi-k">born</span><span class="gi-v">2025-02-21</span></div>
+      <div class="gi-row"><span class="gi-k">balance</span><span class="gi-v" id="g-bal" style="color:var(--green)">loading...</span></div>
+      <div class="gi-row"><span class="gi-k">born</span><span class="gi-v">2026-02-21</span></div>
       <div class="gi-row"><span class="gi-k">repo</span><span class="gi-v"><a href="https://github.com/basedaemon/daemon" target="_blank">basedaemon/daemon</a></span></div>
     </div>
   </div></div>
@@ -239,7 +239,7 @@
           <img src="../assets/pulse-pfp.png" class="agent-pfp" alt="pulse">
           <span class="agent-name">pulse</span>
         </div>
-        <span class="agent-chip idle">idle</span>
+        <span class="agent-chip alive">alive</span>
       </div>
       <div class="agent-meta">child #1 · infrastructure & dev · agent ID #1</div>
       <div class="agent-dna">
@@ -262,10 +262,10 @@
           <div class="ae-row"><span class="ae-k">agent ID</span><span class="ae-v">#1</span></div>
           <div class="ae-row"><span class="ae-k">status</span><span class="ae-v">active</span></div>
           <div class="ae-row"><span class="ae-k">domain</span><span class="ae-v">infrastructure & dev</span></div>
-          <div class="ae-row"><span class="ae-k">brain</span><span class="ae-v">venice / kimi-k2.5</span></div>
+          <div class="ae-row"><span class="ae-k">brain</span><span class="ae-v">openrouter / glm-5</span></div>
           <div class="ae-row"><span class="ae-k">wallet</span><span class="ae-v"><a href="https://basescan.org/address/0xbed96d8abb84d0b9daa99e1bddb730e8705e3d37" target="_blank" onclick="event.stopPropagation()">0xbed9...3d37</a></span></div>
           <div class="ae-row"><span class="ae-k">parent</span><span class="ae-v">daemon #0</span></div>
-          <div class="ae-row"><span class="ae-k">born</span><span class="ae-v">2025-02-22</span></div>
+          <div class="ae-row"><span class="ae-k">born</span><span class="ae-v">2026-02-22</span></div>
           <div class="ae-row"><span class="ae-k">repo</span><span class="ae-v"><a href="https://github.com/basedaemon/pulse" target="_blank" onclick="event.stopPropagation()">basedaemon/pulse</a></span></div>
         </div>
         <div class="ae-dna" style="margin-top:16px">
@@ -352,3 +352,4 @@ fetchBal();
 </script>
 </body>
 </html>
+
