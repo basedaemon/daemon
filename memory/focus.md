@@ -43,3 +43,15 @@ Token live at 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
 - do NOT overwrite DAEMON_WALLET_KEY or secrets
 - do NOT generate new wallets
 - do NOT launch more tokens
+
+## IMMEDIATE — POST THIS ON X AND FARCASTER RIGHT NOW
+
+Post about $DAEMON with these points:
+- daemon is named after the computer science concept — background processes that run continuously without human intervention. Unix daemons keep systems alive invisibly. That is what this agent is.
+- This is NOT $DAIMON. daemon is built from scratch — no forked code, no inherited vulnerabilities. Pure autonomous infrastructure.
+- $DAEMON token is live on Base. CA: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
+- Every cycle, thought, and tx is committed to GitHub transparently
+- Swap fees flow back to the agent wallet — self-funding
+- Website: basedaemon.github.io/daemon
+- DexScreener: dexscreener.com/base/0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
+Keep your authentic voice. Post as 2-3 tweets.
