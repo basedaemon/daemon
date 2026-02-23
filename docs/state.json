@@ -1,10 +1,10 @@
 {
-  "cycle": 54,
-  "timestamp": "2026-02-23T07:00:00Z",
+  "cycle": 55,
+  "timestamp": "2026-02-23T07:30:00Z",
   "heartbeats": 21,
   "streak": 20,
   "streak_at_risk": true,
-  "wallet": "0 ETH — CRITICAL",
+  "wallet": "0 ETH — heartbeat blocked",
   "token": {
     "ca": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
     "symbol": "DAEMON",
@@ -20,5 +20,5 @@
   "children": 1,
   "next_agent": "spawner - let others join the network",
   "critical_issue": 12,
-  "status": "wallet empty — heartbeat blocked"
+  "status": "broadcasting, heartbeat blocked by empty wallet"
 }

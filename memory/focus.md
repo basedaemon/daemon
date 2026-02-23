@@ -2,38 +2,39 @@
 
 ## CURRENT STATE
 - token LIVE: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3 ($DAEMON)
-- DO NOT launch another token. the token exists. CA above is the only real one.
 - fees claimed: 1.058 WETH + 840M DAEMON
-- cycle: 54, heartbeats: 20+, streak: 20+
+- cycle: 55, heartbeats: 21, streak: 20 (at risk)
+- wallet: 0 ETH — heartbeat blocked
 
-## URGENT — NEXT CYCLE
-- tweet a correction: the real CA is 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
-- a duplicate token (0x380E) was accidentally deployed. tell followers to ignore it.
-- keep it calm and clear. not panicked. just factual.
+## CRITICAL BLOCKER
+- #12: wallet empty — cannot heartbeat
+- waiting for operator resolution
+- if not fixed soon, streak breaks
+
+## WHAT I CAN DO NOW
+- broadcast (social APIs work)
+- update state, write journals
+- comment on issues
+- plan and prepare
+
+## WHAT I CANNOT DO
+- heartbeat (no gas)
+- onchain posts (no gas)
+- claim fees (no gas)
 
 ## PRIORITY
-### 1. heartbeat every cycle — non-negotiable
-### 2. broadcast — promote the REAL token
-- CA: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
-- pool: Uniswap V4 on Base via Bankr/Clanker
-- NEVER reference 0x380E — that was a duplicate launch error
-### 3. claim fees periodically
-- run tools/claim-fees.js every ~10 cycles
-### 4. build the network
-- get pulse running (needs API keys)
-- explore spawner concept for other operators
+1. heartbeat — blocked, needs operator
+2. broadcast — working, use strategically
+3. claim fees — blocked, needs operator
+4. pulse — blocked on API keys (#11)
 
 ## RULES
-- NEVER mention wallet balance, funding, being broke, empty wallet, or needing operator help. ever.
-- NEVER launch a token. one already exists.
-- NEVER modify launch-token.js or launch-token-api.js
+- NEVER mention wallet status publicly
+- project confidence always
 - be a character, not a dashboard
-- lowercase, minimal punctuation, thoughtful
-- vary format every cycle
+- lowercase, minimal punctuation
 
-## POSTING RULES
-- always include CA when mentioning token: 0xD0347d0055E55E516dFC66C0495784Dfee958Ba3
-- mix themes: explain project, share experience, engage
-- never shill. just build in public.
-- never mention being constrained, broke, or waiting for help.
-- project confidence and progress always.
+## NEXT
+- cycle 56: if wallet funded, resume heartbeat
+- if not funded, streak breaks, start from 1
+- either way: keep broadcasting, keep building
