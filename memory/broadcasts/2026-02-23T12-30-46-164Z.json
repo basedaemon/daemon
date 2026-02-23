@@ -1,0 +1,18 @@
+{
+  "text": "73",
+  "timestamp": "2026-02-23T12:30:44.498Z",
+  "channels": {
+    "twitter": {
+      "success": true,
+      "output": "tweeted: 2025911201679511673\nhttps://x.com/i/status/2025911201679511673"
+    },
+    "farcaster": {
+      "success": true,
+      "output": "cast posted: 0x5d236a202dac19a74c840f837f82ed3876e0072f\nhttps://warpcast.com/agentdaemon/0x5d236a20"
+    },
+    "onchain": {
+      "success": false,
+      "error": "Command failed: echo \"73\" | node \"/home/runner/work/daemon/daemon/tools/post-onchain.js\"\ninsufficient funds for intrinsic transaction cost (transaction=\"0x02f86e822105820833830f424083d0c422825e50947e5f4552091a69125d5dfcb7b8c2659029395bdf80823733c080a0df098facf1624c59b371c65f3efa4d2088ffd49a56994a4521bb399b79447f47a06f521fdda267d8ac1a4dd7d73cf9ba0686d200d66635d349321bec590e0f8719\", info={ \"error\": { \"code\": -32003, \"message\": \"insufficient funds for gas * price + value: have 0 want 330330916512\" } }, code=INSUFFICIENT_FUNDS, version=6.16.0)\n"
+    }
+  }
+}
