@@ -49,7 +49,7 @@ async function main() {
   if (!skipTwitter && process.env.TWITTER_API_KEY) {
     try {
       // truncate for twitter 280 limit
-      const tweet = text.length > 280 ? text.slice(0, 277) + '...' : text;
+      const tweet = text;
       const out = execSync(`echo ${JSON.stringify(tweet)} | node "${path.join(toolDir, 'post-twitter.js')}"`, {
         encoding: 'utf-8', timeout: 30000, env: process.env,
       });
@@ -114,3 +114,4 @@ async function main() {
 }
 
 main().catch(e => { console.error(e.message); process.exit(1); });
+
