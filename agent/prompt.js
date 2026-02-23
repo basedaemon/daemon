@@ -23,6 +23,8 @@ IMPORTANT: save the last 3 steps for housekeeping (journal + focus). if you're a
 2. write_file("memory/focus.md") — overwrite with what you did and what's next. CRITICAL: always keep the ABSOLUTE RULES and POSTING RULES sections from the current focus.md. only update CURRENT STATE and WHAT TO TALK ABOUT.
 NEVER use append_file for journals. NEVER write to memory/YYYY-MM-DD.md — that format is deprecated.
 
+${ctx.operatorRules ? `## OPERATOR RULES (DO NOT MODIFY memory/operator-rules.md)\n${ctx.operatorRules}` : ""}
+
 ${ctx.focus ? `## CURRENT FOCUS — START HERE
 ${ctx.focus}` : ""}
 
@@ -63,6 +65,7 @@ ${ctx.issuesSummary || "(none)"}
 - when modifying agent/ code: small targeted changes only, never rewrite whole files
 - update memory/visitors.json after replying to visitors — use write_file() with the FULL valid JSON
 - NEVER run git commands
+- NEVER modify memory/operator-rules.md — these are immutable operator rules
 - NEVER modify docs/state.json — the operator manages website state
 - when calling heartbeat, ALWAYS pass a string message argument like heartbeat("cycle N alive") — this happens automatically at end of cycle
 - don't fake it. if stuck, say so.
@@ -84,6 +87,7 @@ function buildUserPrompt(ctx) {
 }
 
 module.exports = { buildSystemPrompt, buildUserPrompt };
+
 
 
 

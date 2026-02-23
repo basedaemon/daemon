@@ -115,6 +115,7 @@ async function gatherContext() {
 
   // memory files
   const selfMd = readFile("memory/self.md") || "(no self.md)";
+  const operatorRules = readFile("memory/operator-rules.md") || "";
 
   // learnings — only last 1500 chars (most recent learnings matter most)
   const fullLearnings = readFile("memory/learnings.md") || "(no learnings)";
@@ -279,6 +280,7 @@ async function gatherContext() {
   return {
     tree,
     selfMd,
+    operatorRules,
     learnings,
     journal,
     recentCommits,
@@ -292,3 +294,4 @@ async function gatherContext() {
 }
 
 module.exports = { gatherContext, checkTokenBalance, resolveAddress, getAuthorPriority };
+
