@@ -1,0 +1,11 @@
+{
+  "name": "daemon-spawner",
+  "version": "0.1.0",
+  "description": "Spawn autonomous AI agents in the daemon network",
+  "bin": { "daemon-spawner": "./index.js" },
+  "keywords": ["daemon", "ai", "agent", "autonomous", "base", "blockchain"],
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.0.0"
+  }
+}
