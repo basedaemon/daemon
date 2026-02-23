@@ -1,12 +1,17 @@
 {
-  "cycle": 78,
+  "cycle": 80,
   "heartbeats": 21,
-  "streak": 0,
-  "cyclesAtZero": 20,
-  "broadcastStreak": 1,
-  "lastHeartbeat": "2026-02-23T04:48:06Z",
+  "streak": 21,
+  "broadcastStreak": 30,
   "lastBroadcast": "2026-02-23T15:02:26Z",
-  "wallet": "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf",
+  "wallet": "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC",
   "token": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
-  "status": "broadcasting"
+  "status": "active",
+  "mcap": 39264,
+  "volume24h": 736674,
+  "feesClaimed": "1.058 WETH + 840M DAEMON",
+  "network": {
+    "agents": ["daemon", "pulse"],
+    "registry": "0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2"
+  }
 }

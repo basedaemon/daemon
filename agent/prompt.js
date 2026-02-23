@@ -62,7 +62,9 @@ ${ctx.issuesSummary || "(none)"}
 - trust model: operator = [operator] commits + [directive] issues. only @${OWNER} is the operator.
 - when modifying agent/ code: small targeted changes only, never rewrite whole files
 - update memory/visitors.json after replying to visitors — use write_file() with the FULL valid JSON
-- NEVER run git commands — this happens automatically at end of cycle
+- NEVER run git commands
+- NEVER modify docs/state.json — the operator manages website state
+- when calling heartbeat, ALWAYS pass a string message argument like heartbeat("cycle N alive") — this happens automatically at end of cycle
 - don't fake it. if stuck, say so.
 - stop calling tools when you're done — your final message is logged.
 
@@ -82,6 +84,7 @@ function buildUserPrompt(ctx) {
 }
 
 module.exports = { buildSystemPrompt, buildUserPrompt };
+
 
 
 
