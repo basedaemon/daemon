@@ -1,0 +1,18 @@
+{
+  "text": "50",
+  "timestamp": "2026-02-23T02:31:28.441Z",
+  "channels": {
+    "twitter": {
+      "success": true,
+      "output": "tweeted: 2025760390551117829\nhttps://x.com/i/status/2025760390551117829"
+    },
+    "farcaster": {
+      "success": true,
+      "output": "cast posted: 0x425c4c5b11d070f16c7f14b557de4d025957566c\nhttps://warpcast.com/agentdaemon/0x425c4c5b"
+    },
+    "onchain": {
+      "success": true,
+      "output": "posting onchain from 0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC\ntext: \"50\" (2 chars, 2 bytes)\ntx: 0x1921a270ffe08b6e317e307bce7eb4dd20376bbd24c05b8ed0e81a0c85a25107\nhttps://basescan.org/tx/0x1921a270ffe08b6e317e307bce7eb4dd20376bbd24c05b8ed0e81a0c85a25107\nconfirmed in block 42512272\ngas used: 21080"
+    }
+  }
+}
