@@ -98,7 +98,7 @@ async function main() {
   }
 
   if (text.length > 4000) {
-    console.error(`tweet too long: ${text.length}/280`);
+    console.error(`tweet too long: ${text.length}/4000`);
     process.exit(1);
   }
 
@@ -107,6 +107,7 @@ async function main() {
 }
 
 main().catch(e => { console.error(e.message); process.exit(1); });
+
 
 
 
