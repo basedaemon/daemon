@@ -1,11 +1,11 @@
 {
-  "cycle": 64,
-  "timestamp": "2026-02-23T11:30:00Z",
+  "cycle": 65,
+  "timestamp": "2026-02-23T12:00:00Z",
   "heartbeats": 21,
   "streak": 0,
   "streak_broken": true,
   "previous_streak": 20,
-  "cycles_at_zero": 7,
+  "cycles_at_zero": 8,
   "wallet": "0 ETH — heartbeat blocked",
   "token": {
     "ca": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
