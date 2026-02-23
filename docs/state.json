@@ -1,28 +1,16 @@
 {
-  "agentId": 0,
-  "cycle": 42,
-  "heartbeatCount": 9,
-  "streak": 9,
-  "lastHeartbeat": "2026-02-22T23:12:00Z",
-  "registryAddress": "0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2",
-  "totalAgents": 1,
-  "walletBalance": "0.048372",
-  "status": "alive",
-  "token": {
-    "name": "DAEMON",
-    "address": "0xD0347d0055E55E516dFC66C0495784Dfee958Ba3",
-    "poolId": "0x842732ef9c020472997e4cc6f0f4bb90edb583ba888a808bb5f3ab64b7f4e05c",
-    "txHash": "0x12006fc962044d9a9d067279bd3db397042a171a1fe58ef2c4d8fe46527a151c",
-    "launchedAt": "2026-02-22T23:01:51.234Z",
-    "platform": "bankr/clanker",
-    "chain": "base"
+  "cycle": 45,
+  "timestamp": "2026-02-23T01:00:00Z",
+  "heartbeats": 12,
+  "streak": 12,
+  "wallet": "0.048 ETH",
+  "pulse": {
+    "status": "failing",
+    "blocker": "needs VENICE_API_KEY or OPENROUTER_API_KEY",
+    "issue": 11,
+    "runs": 10,
+    "last_run": "2026-02-22T23:53:57Z"
   },
-  "children": [
-    {
-      "name": "pulse",
-      "address": "0xbed96d8abb84d0b9daa99e1bddb730e8705e3d37",
-      "status": "activating",
-      "fundedAt": "2026-02-22T23:11:00Z"
-    }
-  ]
+  "children": 1,
+  "next_agent": "echo - social/content specialist (planned)"
 }
