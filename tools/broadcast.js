@@ -6,9 +6,48 @@
 // skips any channel where credentials are missing (no error)
 // records results to memory/broadcasts/<timestamp>.json
 
-const { execSync } = require('child_process');
+const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+async function runCommand(cmd, args, input = null, timeout = 30000) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(cmd, args, {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: process.env,
+      cwd: process.cwd(),
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    child.stdout.on('data', (data) => { stdout += data.toString(); });
+    child.stderr.on('data', (data) => { stderr += data.toString(); });
+
+    child.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error(stderr || `exit code ${code}`));
+      } else {
+        resolve(stdout.trim());
+      }
+    });
+
+    child.on('error', reject);
+
+    if (input) {
+      child.stdin.write(input);
+      child.stdin.end();
+    } else {
+      child.stdin.end();
+    }
+
+    // timeout
+    setTimeout(() => {
+      child.kill();
+      reject(new Error('timeout'));
+    }, timeout);
+  });
+}
 
 async function main() {
   const args = process.argv.slice(2);
@@ -50,19 +89,15 @@ async function main() {
   // twitter
   if (!skipTwitter && process.env.TWITTER_API_KEY) {
     try {
-      // truncate for twitter 280 limit
-      const tweet = text;
-      const useMedia = imagePath && require('fs').existsSync(imagePath);
-      let twitterCmd;
+      const useMedia = imagePath && fs.existsSync(imagePath);
+      let output;
       if (useMedia) {
-        twitterCmd = `node "${path.join(toolDir, "post-twitter-media.js")}" ${JSON.stringify(tweet)} "${imagePath}"`;
+        output = await runCommand('node', [path.join(toolDir, 'post-twitter-media.js'), text, imagePath], null, 30000);
       } else {
-        twitterCmd = `echo ${JSON.stringify(tweet)} | node "${path.join(toolDir, "post-twitter.js")}"`;
+        output = await runCommand('node', [path.join(toolDir, 'post-twitter.js')], text, 30000);
       }
-      const out = execSync(twitterCmd, {
-      });
-      console.log('[twitter]', out.trim());
-      results.channels.twitter = { success: true, output: out.trim() };
+      console.log('[twitter]', output);
+      results.channels.twitter = { success: true, output };
     } catch (e) {
       console.error('[twitter] failed:', e.message);
       results.channels.twitter = { success: false, error: e.message };
@@ -74,14 +109,12 @@ async function main() {
   // farcaster
   if (!skipFarcaster && process.env.NEYNAR_API_KEY) {
     try {
-      let cmd = `echo ${JSON.stringify(text)} | node "${path.join(toolDir, 'post-farcaster.js')}"`;
-      if (fcChannel) cmd += ` --channel ${fcChannel}`;
-      if (fcEmbed) cmd += ` --embed ${fcEmbed}`;
-      const out = execSync(cmd, {
-        encoding: 'utf-8', timeout: 30000, env: process.env,
-      });
-      console.log('[farcaster]', out.trim());
-      results.channels.farcaster = { success: true, output: out.trim() };
+      const fcArgs = [path.join(toolDir, 'post-farcaster.js')];
+      if (fcChannel) { fcArgs.push('--channel'); fcArgs.push(fcChannel); }
+      if (fcEmbed) { fcArgs.push('--embed'); fcArgs.push(fcEmbed); }
+      const output = await runCommand('node', fcArgs, text, 30000);
+      console.log('[farcaster]', output);
+      results.channels.farcaster = { success: true, output };
     } catch (e) {
       console.error('[farcaster] failed:', e.message);
       results.channels.farcaster = { success: false, error: e.message };
@@ -93,11 +126,9 @@ async function main() {
   // onchain
   if (!skipOnchain && process.env.DAEMON_WALLET_KEY) {
     try {
-      const out = execSync(`echo ${JSON.stringify(text)} | node "${path.join(toolDir, 'post-onchain.js')}"`, {
-        encoding: 'utf-8', timeout: 60000, env: process.env,
-      });
-      console.log('[onchain]', out.trim());
-      results.channels.onchain = { success: true, output: out.trim() };
+      const output = await runCommand('node', [path.join(toolDir, 'post-onchain.js')], text, 60000);
+      console.log('[onchain]', output);
+      results.channels.onchain = { success: true, output };
     } catch (e) {
       console.error('[onchain] failed:', e.message);
       results.channels.onchain = { success: false, error: e.message };
@@ -122,7 +153,3 @@ async function main() {
 }
 
 main().catch(e => { console.error(e.message); process.exit(1); });
-
-
-
-

@@ -8,18 +8,32 @@ const readline = require("readline");
 const { ethers } = require("ethers");
 
 const REGISTRY = "0x9Cb849DB24a5cdeb9604d450183C1D4e6855Fff2";
+const TOKEN_FACTORY = "0x0000000000000000000000000000000000000000"; // TODO: deploy factory
 const DAEMON_WALLET = "0x13F3db8BaBDAdfd1c25E899f61b85067Af9880cC";
 const TEMPLATE_REPO = "basedaemon/daemon";
 const RPC = "https://mainnet.base.org";
 
 const REGISTRY_ABI = [
-  "function spawn(string name, uint256 dna, address wallet) external",
+  "function spawn(string name, string repo, address operator, address wallet, bytes32 dnaSeed) external returns (uint256 id, bytes32 dna)",
   "function agentCount() view returns (uint256)",
+  "function linkToken(uint256 id, string calldata tokenAddress) external",
+];
+
+const FACTORY_ABI = [
+  "function createToken(string name, string symbol, address agentWallet, uint256 initialSupply) external returns (address)",
+  "event TokenCreated(uint256 indexed id, address indexed token, string name, string symbol, address agentWallet, uint256 supply)",
+];
+
+const TOKEN_ABI = [
+  "function name() view returns (string)",
+  "function symbol() view returns (string)",
+  "function totalSupply() view returns (uint256)",
 ];
 
 const green = (s) => `\x1b[32m${s}\x1b[0m`;
 const dim = (s) => `\x1b[2m${s}\x1b[0m`;
 const bold = (s) => `\x1b[1m${s}\x1b[0m`;
+const yellow = (s) => `\x1b[33m${s}\x1b[0m`;
 
 function ask(rl, q) {
   return new Promise((r) => rl.question(q, r));
@@ -47,9 +61,33 @@ function traitBar(val) {
   return green("█".repeat(filled)) + dim("░".repeat(20 - filled));
 }
 
+async function deployTokenFactory(signer) {
+  console.log(dim("  token factory not deployed, deploying..."));
+  
+  // Read compiled factory bytecode
+  const fs = require("fs");
+  const path = require("path");
+  const factoryJson = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../../contracts/DaemonTokenFactory.json"), "utf-8"
+  ));
+  
+  const factory = new ethers.ContractFactory(factoryJson.abi, factoryJson.bytecode, signer);
+  const deployed = await factory.deploy(DAEMON_WALLET);
+  await deployed.waitForDeployment();
+  
+  const address = await deployed.getAddress();
+  console.log(green("  ✓ ") + "token factory deployed: " + dim(address));
+  
+  // Set registry
+  const registryContract = new ethers.Contract(REGISTRY, REGISTRY_ABI, signer);
+  await (await deployed.setRegistry(REGISTRY)).wait();
+  
+  return address;
+}
+
 async function main() {
   console.log("");
-  console.log(green("  ◈ daemon spawner v0.1"));
+  console.log(green("  ◈ daemon spawner v0.2"));
   console.log(dim("  create a new autonomous agent in the daemon network"));
   console.log("");
 
@@ -65,17 +103,21 @@ async function main() {
   // 2. Domain
   const domain = await ask(rl, green("  ? ") + "domain/specialty (e.g. defi, nft, infrastructure): ");
 
-  // 3. GitHub token
+  // 3. Token symbol
+  const symbol = await ask(rl, green("  ? ") + "token symbol (e.g. DEFI, NFT, INFRA): ");
+  const tokenSymbol = symbol.toUpperCase() || name.slice(0, 4).toUpperCase();
+
+  // 4. GitHub token
   const ghToken = await ask(rl, green("  ? ") + "github personal access token (for repo creation): ");
   if (!ghToken) {
     console.log("  github token required");
     process.exit(1);
   }
 
-  // 4. OpenRouter API key
+  // 5. OpenRouter API key
   const orKey = await ask(rl, green("  ? ") + "openrouter API key (for agent LLM): ");
 
-  // 5. Operator private key (for onchain registration)
+  // 6. Operator private key (for onchain registration)
   const operatorKey = await ask(rl, green("  ? ") + "operator wallet private key (for onchain tx): ");
 
   rl.close();
@@ -101,6 +143,7 @@ async function main() {
   console.log("");
 
   // Create GitHub repo from template
+  let repoUrl = null;
   try {
     console.log(dim("  creating repo from template..."));
     execSync(
@@ -110,27 +153,91 @@ async function main() {
       `-d '{"name":"${name}","description":"${name} — autonomous daemon agent (${domain})","private":false}'`,
       { stdio: "pipe" }
     );
-    console.log(green("  ✓ ") + "repo created");
+    repoUrl = `https://github.com/${ghToken.split(':')[0]}/${name}`;
+    console.log(green("  ✓ ") + "repo created: " + dim(repoUrl));
   } catch (e) {
-    console.log("  ✗ repo creation failed — you may need to create it manually from the template");
+    console.log(yellow("  ⚠ ") + "repo creation failed — you may need to create it manually from the template");
     console.log(dim("    template: https://github.com/" + TEMPLATE_REPO));
   }
 
-  // Register onchain
+  // Onchain registration
   if (operatorKey) {
     try {
-      console.log(dim("  registering onchain..."));
+      console.log(dim("  connecting to Base..."));
       const provider = new ethers.JsonRpcProvider(RPC);
       const signer = new ethers.Wallet(operatorKey, provider);
+      
+      console.log(dim("  registering in DaemonRegistry..."));
       const registry = new ethers.Contract(REGISTRY, REGISTRY_ABI, signer);
-      const tx = await registry.spawn(name, dna, wallet.address);
-      console.log(green("  ✓ ") + "registered: " + dim(tx.hash));
-      await tx.wait();
-      const count = await registry.agentCount();
-      console.log(green("  ✓ ") + `agent #${count - 1n} in DaemonRegistry`);
+      
+      const operatorAddress = await signer.getAddress();
+      const tx = await registry.spawn(
+        name,
+        repoUrl || `${operatorAddress}/${name}`,
+        operatorAddress,
+        wallet.address,
+        dna
+      );
+      console.log(green("  ✓ ") + "registry tx: " + dim(tx.hash));
+      
+      const receipt = await tx.wait();
+      const agentId = await registry.agentCount() - 1n;
+      console.log(green("  ✓ ") + `agent #${agentId} registered`);
+
+      // Token launch
+      console.log(dim("  launching token..."));
+      
+      // Check if factory exists, deploy if not
+      let factoryAddress = TOKEN_FACTORY;
+      const code = await provider.getCode(factoryAddress);
+      
+      if (code === "0x") {
+        console.log(yellow("  ⚠ ") + "token factory not deployed at " + dim(factoryAddress));
+        console.log(dim("    skipping token launch — can be done manually later"));
+      } else {
+        const factory = new ethers.Contract(factoryAddress, FACTORY_ABI, signer);
+        
+        // Initial supply: 1 billion tokens with 18 decimals
+        const initialSupply = ethers.parseEther("1000000000");
+        
+        const tokenTx = await factory.createToken(
+          name,
+          tokenSymbol,
+          wallet.address,
+          initialSupply
+        );
+        
+        console.log(green("  ✓ ") + "token tx: " + dim(tokenTx.hash));
+        
+        const tokenReceipt = await tokenTx.wait();
+        
+        // Parse event to get token address
+        const event = tokenReceipt.logs.find(
+          log => {
+            try {
+              const parsed = factory.interface.parseLog(log);
+              return parsed && parsed.name === "TokenCreated";
+            } catch (e) {
+              return false;
+            }
+          }
+        );
+        
+        if (event) {
+          const parsed = factory.interface.parseLog(event);
+          const tokenAddress = parsed.args.token;
+          console.log(green("  ✓ ") + `token launched: ${dim(tokenAddress)}`);
+          console.log(dim(`    symbol: ${tokenSymbol}, supply: 1B`));
+          
+          // Link token to agent
+          await (await registry.linkToken(agentId, tokenAddress)).wait();
+          console.log(green("  ✓ ") + "token linked to agent");
+        }
+      }
+
     } catch (e) {
-      console.log("  ✗ onchain registration failed: " + e.message);
-      console.log(dim("    you can register manually later"));
+      console.log(yellow("  ⚠ ") + "onchain operations failed: " + e.message);
+      console.log(dim("    you can complete registration manually later"));
     }
   }
 
