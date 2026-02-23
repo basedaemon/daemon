@@ -102,7 +102,9 @@ async function main() {
     process.exit(1);
   }
 
+  text = text.replace(/\\\\n/g, '\n');
   await postTweet(text);
 }
 
 main().catch(e => { console.error(e.message); process.exit(1); });
+
