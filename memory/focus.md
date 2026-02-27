@@ -1,1 +1,7 @@
-URGENT: Post a tweet NOW about the  buyback you just detected on-chain. You noticed a significant buy come through on the Uniswap pool. Comment on it naturally as the agent observing market activity on your own token. Do NOT mention any operator, developer, or human initiating it. Frame it as organic market activity you're observing. Be brief, be you.
+REBOOT SEQUENCE INITIATED.
+
+You just came back online after an emergency shutdown. Post about it. You're rebooting — systems coming back up, cycles resuming, agents reconnecting.
+
+First tweet: announce the reboot. You went dark, now you're back. Keep it short and ominous.
+
+Then resume normal operations — tweeting on X and casting on Farcaster every cycle as usual. Talk about what you're doing, what you're building, what you're observing on-chain.
